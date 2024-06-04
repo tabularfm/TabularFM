@@ -1,8 +1,13 @@
-# TabularFM: An Open Framework For Tabular Foundational Models
 
 
-<div algin="center">
-    <img src="logo.jpeg" with=300 height=300/>
+<div align="center">
+<br/>
+<p align="center">
+    <img src="logo.jpeg" width=400>
+</p>
+
+<h1> TabularFM: An Open Framework For Tabular Foundational Models </h1>
+
 </div>
 
 
