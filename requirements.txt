@@ -7,3 +7,5 @@ sdmetrics==0.13.1
 transformers
 matplotlib
 typer
+datasets
+accelerate

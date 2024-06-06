@@ -229,7 +229,7 @@ def merge_training_hist(new_hist, dataset_name, merged_hist):
         
     return merged_hist
 
-def save_model_weights(model_type, model, save_path, suffix=None):
+def save_model_weights(model_type, obj, save_path, suffix=None):
     if model_type in ['tvae', 'stvae', 'stvaem']:
         if suffix is not None:
             encoder_name = f'encoder_{suffix}'
@@ -238,7 +238,7 @@ def save_model_weights(model_type, model, save_path, suffix=None):
         else:
             save_names = []
             
-        save_model_weights_tvae(model, save_path, save_names=save_names)
+        save_model_weights_tvae(obj, save_path, save_names=save_names)
     
     if model_type in ['ctgan']:
         if suffix is not None:
@@ -248,7 +248,10 @@ def save_model_weights(model_type, model, save_path, suffix=None):
         else:
             save_names = []
             
-        save_model_weights_gan(model, save_path, save_names=save_names)
+        save_model_weights_gan(obj, save_path, save_names=save_names)
+        
+    if model_type in ['great']:
+        save_model_weights_great(obj, save_path, suffix)
 
 def save_model_weights_tvae(model: CustomTVAE, path: str, save_names=[]):
     import torch
@@ -269,6 +272,13 @@ def save_model_weights_gan(model: CustomCTGAN, path: str, save_names=[]):
     else:
         torch.save(model._generator.state_dict(), os.path.join(path, str(save_names[0]) + '.pt'))
         torch.save(model._discriminator.state_dict(), os.path.join(path, str(save_names[1]) + '.pt'))
+        
+def save_model_weights_great(trainer, path: str, suffix=None):
+    
+    if suffix is None:
+        trainer.save_model(os.path.join(path, 'weights'))
+    else:
+        trainer.save_model(os.path.join(path, f'{suffix}'))
     
 def save_training_history(training_hist: pd.DataFrame, path: str, filename=None):
     # index as orders to remember the sequence of training
@@ -278,17 +288,20 @@ def save_training_history(training_hist: pd.DataFrame, path: str, filename=None)
     training_hist.to_csv(os.path.join(path, f'{filename}.csv'))
     
 def save_latest_training_info(model_type, epoch, step_path, save_path, suffix='temp'):
+    
     if model_type in ['tvae', 'stvae', 'stvaem']:
         encoder_name = f'encoder_{suffix}'
         decoder_name = f'decoder_{suffix}'
-            
         save_latest_training_info_tvae(epoch, step_path, encoder_name, decoder_name, save_path)
         
     if model_type in ['ctgan']:
         generator_name = f'generator_{suffix}'
         discriminator_name = f'discriminator_{suffix}'
-        
         save_latest_training_info_gan(epoch, step_path, generator_name, discriminator_name, save_path)
+        
+    if model_type in ['great']:
+        weight_path = 'temp_weights'
+        save_latest_training_info_great(epoch, weight_path, save_path)
     
 def save_latest_training_info_gan(epoch, step_path, generator_weight_path, discriminator_weight_path, path, filename=None):
     latest_training_info = {
@@ -307,6 +320,15 @@ def save_latest_training_info_tvae(epoch, step_path, encoder_weight_path, decode
         'dataset': step_path,
         'encoder_weight': encoder_weight_path,
         'decoder_weight': decoder_weight_path,
+    }
+    
+    filename = 'latest_training' if filename is None else filename
+    json.dump(latest_training_info, open(os.path.join(path, f'{filename}.json'), 'w'))
+    
+def save_latest_training_info_great(epoch, weight_path, path, filename=None):
+    latest_training_info = {
+        'epoch': epoch,
+        'weights': weight_path,
     }
     
     filename = 'latest_training' if filename is None else filename

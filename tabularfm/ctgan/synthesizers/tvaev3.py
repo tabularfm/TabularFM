@@ -13,7 +13,7 @@ from tqdm import tqdm
 from ctgan.data_transformer import DataTransformer
 from ctgan.synthesizers.base import BaseSynthesizer, random_state
 
-from callbacks import EarlyStopping
+from ctgan.callbacks import EarlyStopping
 
 
 class Encoder(Module):
