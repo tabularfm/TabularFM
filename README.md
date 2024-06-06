@@ -11,19 +11,35 @@
 <span><a href="https://tabularfm.github.io" target="_blank">Official webite</a></span>
 </div>
 
-
-# Processed Datasets
-* [Kaggle](https://drive.google.com/drive/folders/1HnRTMBbX9kTUiDZ4pjNSWaM5SJLUSULx?usp=drive_link)
-* [1M Gittables Datasets](https://drive.google.com/file/d/10jBLjilKI5MJ_qXyDKxJFfN9ez9y9ydv/view?usp=drive_link)
-
 # Install the environment
 
 ```python
 conda create -n venv python=3.9
 conda activate venv
 pip install --upgrade pip
-pip install -r latest_requirements.txt
+pip install -r requirements.txt
 ```
+
+# Usage
+
+Pretraining
+```python
+python tabularfm/pretrain.py -m <model_type> -d <datasets directory> -s <save dir>
+```
+
+Example:
+```python
+python tabularfm/pretrain.py -m "stvae" -d "datasets/kaggle/" -s "result_stvae/" -c "tabularfm/configs/pt_stvae.yaml"
+```
+
+We support learning methods: `ctgan`, `tvae`, `stvae`, `stvaem`, `great`
+
+
+
+# Supported Datasets
+* [Kaggle](https://drive.google.com/drive/folders/1HnRTMBbX9kTUiDZ4pjNSWaM5SJLUSULx?usp=drive_link)
+* [1M Gittables Datasets](https://drive.google.com/file/d/10jBLjilKI5MJ_qXyDKxJFfN9ez9y9ydv/view?usp=drive_link)
+
 
 # Note
 * Set up directories before run the experiment

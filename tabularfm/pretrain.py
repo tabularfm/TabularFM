@@ -3,7 +3,7 @@ import argparse
 from utils import get_config, create_model_config, create_model, get_pretrain_paths
 from pipelines import proceed_pretrain
 
-def pretrain_model(model_type, data_path, save_path, config_path):
+def pretrain_model(model_type, data_path, save_path, config_path, resume):
     
     configs = get_config(config_path)
     model_config = create_model_config(data_path, configs, model_type)
