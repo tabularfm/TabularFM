@@ -2,11 +2,11 @@
 import random
 
 from transformers import AutoTokenizer, TrainingArguments, AutoModelForCausalLM, EarlyStoppingCallback
-from be_great.great_dataset import GReaTDataset
+from tabularfm.be_great.great_dataset import GReaTDataset
 from sklearn.model_selection import train_test_split
-from be_great.great_dataset import GReaTDataset, GReaTDataCollator
-from be_great.great_trainer import GReaTTrainer
-from be_great.great import CustomGReaT
+from tabularfm.be_great.great_dataset import GReaTDataset, GReaTDataCollator
+from tabularfm.be_great.great_trainer import GReaTTrainer
+from tabularfm.be_great.great import CustomGReaT
 
 import pandas as pd
 import pickle

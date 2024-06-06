@@ -1,8 +1,8 @@
 import random
 import json
-from ctgan.data_transformer import ColnameTransformer
+from tabularfm.ctgan.data_transformer import ColnameTransformer
 from utils import *
-from ctgan.synthesizers.tvaev3 import CustomTVAE as CustomTVAEv3
+from tabularfm.ctgan.synthesizers.tvaev3 import CustomTVAE as CustomTVAEv3
 
 # entry
 # train

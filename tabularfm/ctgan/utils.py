@@ -229,7 +229,28 @@ def merge_training_hist(new_hist, dataset_name, merged_hist):
         
     return merged_hist
 
-def save_model_weights(model: CustomTVAE, path: str, save_names=[]):
+def save_model_weights(model_type, model, save_path, suffix=None):
+    if model_type in ['tvae', 'stvae', 'stvaem']:
+        if suffix is not None:
+            encoder_name = f'encoder_{suffix}'
+            decoder_name = f'decoder_{suffix}'
+            save_names = [encoder_name, decoder_name]
+        else:
+            save_names = []
+            
+        save_model_weights_tvae(model, save_path, save_names=save_names)
+    
+    if model_type in ['ctgan']:
+        if suffix is not None:
+            generator_name = f'generator_{suffix}'
+            discriminator_name = f'discriminator_{suffix}'
+            save_names = [generator_name, discriminator_name]
+        else:
+            save_names = []
+            
+        save_model_weights_gan(model, save_path, save_names=save_names)
+
+def save_model_weights_tvae(model: CustomTVAE, path: str, save_names=[]):
     import torch
     
     if len(save_names) == 0:
@@ -239,7 +260,7 @@ def save_model_weights(model: CustomTVAE, path: str, save_names=[]):
         torch.save(model.encoder.state_dict(), os.path.join(path, str(save_names[0]) + '.pt'))
         torch.save(model.decoder.state_dict(), os.path.join(path, str(save_names[1]) + '.pt'))
         
-def save_gan_model_weights(model: CustomCTGAN, path: str, save_names=[]):
+def save_model_weights_gan(model: CustomCTGAN, path: str, save_names=[]):
     import torch
     
     if len(save_names) == 0:
@@ -256,7 +277,20 @@ def save_training_history(training_hist: pd.DataFrame, path: str, filename=None)
     filename = 'training_hist' if filename is None else filename
     training_hist.to_csv(os.path.join(path, f'{filename}.csv'))
     
-def save_latest_training_info(epoch, step_path, generator_weight_path, discriminator_weight_path, path, filename=None):
+def save_latest_training_info(model_type, epoch, step_path, save_path, suffix='temp'):
+    if model_type in ['tvae', 'stvae', 'stvaem']:
+        encoder_name = f'encoder_{suffix}'
+        decoder_name = f'decoder_{suffix}'
+            
+        save_latest_training_info_tvae(epoch, step_path, encoder_name, decoder_name, save_path)
+        
+    if model_type in ['ctgan']:
+        generator_name = f'generator_{suffix}'
+        discriminator_name = f'discriminator_{suffix}'
+        
+        save_latest_training_info_gan(epoch, step_path, generator_name, discriminator_name, save_path)
+    
+def save_latest_training_info_gan(epoch, step_path, generator_weight_path, discriminator_weight_path, path, filename=None):
     latest_training_info = {
         'epoch': epoch,
         'dataset': step_path,

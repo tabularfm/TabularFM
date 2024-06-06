@@ -1,7 +1,7 @@
 import os
 import json
-from ctgan.data_transformer import ColnameTransformer
-from ctgan.synthesizers.tvaev3 import CustomTVAE as CustomTVAEv3
+from tabularfm.ctgan.data_transformer import ColnameTransformer
+from tabularfm.ctgan.synthesizers.tvaev3 import CustomTVAE as CustomTVAEv3
 from utils import *
 
 DATA_PATH = 'data/processed_dataset'

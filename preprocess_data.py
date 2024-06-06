@@ -1,6 +1,6 @@
 import os
 import shutil
-from preprocess.preprocessing import preprocess_clean
+from tabularfm.preprocess.preprocessing import preprocess_clean
 
 ############# CONFIG #############
 

@@ -1,5 +1,5 @@
-from ctgan.synthesizers.tvae import CustomTVAE
-from ctgan.data_transformer import DataTransformer
+from tabularfm.ctgan.synthesizers.tvae import CustomTVAE
+from tabularfm.ctgan.data_transformer import DataTransformer
 import pandas as pd
 import pickle
 import json

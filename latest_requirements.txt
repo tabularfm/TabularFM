@@ -6,3 +6,4 @@ rdt==1.9.2
 sdmetrics==0.13.1
 transformers
 matplotlib
+typer

@@ -4,7 +4,7 @@ import warnings
 
 import numpy as np
 import pandas as pd
-from callbacks import EarlyStopping
+from ctgan.callbacks import EarlyStopping
 import torch
 from torch import optim
 from torch.nn import BatchNorm1d, Dropout, LeakyReLU, Linear, Module, ReLU, Sequential, functional

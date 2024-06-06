@@ -1,7 +1,7 @@
 import os
 import json
 from sklearn.model_selection import train_test_split
-from be_great.great import CustomGReaT
+from tabularfm.be_great.great import CustomGReaT
 from utils_great import *
 
 DATA_PATH = 'data/processed_dataset'

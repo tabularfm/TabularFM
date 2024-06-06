@@ -1,7 +1,7 @@
 import random
 import json
 from utils import *
-from ctgan.synthesizers.ctgan import CustomCTGAN
+from tabularfm.ctgan.synthesizers.ctgan import CustomCTGAN
 import gc
 
 # entry

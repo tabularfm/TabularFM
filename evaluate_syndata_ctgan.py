@@ -1,6 +1,6 @@
 import os
 import json
-from ctgan.synthesizers.ctgan import CustomCTGAN
+from tabularfm.ctgan.synthesizers.ctgan import CustomCTGAN
 from utils import *
 
 DATA_PATH = 'data/processed_dataset'

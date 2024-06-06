@@ -1,6 +1,6 @@
 import os
 import json
-from ctgan.synthesizers.tvaev2 import CustomTVAE as CustomTVAEv2
+from tabularfm.ctgan.synthesizers.tvaev2 import CustomTVAE as CustomTVAEv2
 from utils import *
 
 DATA_PATH = 'data/processed_dataset'

@@ -1,6 +1,6 @@
 from utils import *
-from ctgan.synthesizers.tvaev3 import CustomTVAE as CustomTVAEv3
-from ctgan.data_transformer import ColnameTransformer
+from tabularfm.ctgan.synthesizers.tvaev3 import CustomTVAE as CustomTVAEv3
+from tabularfm.ctgan.data_transformer import ColnameTransformer
 import random
 
 ############# CONFIG #############

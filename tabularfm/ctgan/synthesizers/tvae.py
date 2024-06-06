@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import torch
 from torch.nn import Linear, Module, Parameter, ReLU, Sequential
-from torch.nn.functional import cross_entropy, mse_loss
+from torch.nn.functional import cross_entropy
 from torch.optim import Adam
 from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm
@@ -12,7 +12,7 @@ from tqdm import tqdm
 from ctgan.data_transformer import DataTransformer
 from ctgan.synthesizers.base import BaseSynthesizer, random_state
 
-from callbacks import EarlyStopping
+from ctgan.callbacks import EarlyStopping
 
 
 class Encoder(Module):
@@ -73,11 +73,11 @@ class Decoder(Module):
 
         seq.append(Linear(dim, data_dim))
         self.seq = Sequential(*seq)
-        # self.sigma = Parameter(torch.ones(data_dim) * 0.1)
+        self.sigma = Parameter(torch.ones(data_dim) * 0.1)
 
     def forward(self, input_):
         """Decode the passed `input_`."""
-        return self.seq(input_), None
+        return self.seq(input_), self.sigma
 
 
 def _loss_function(recon_x, x, sigmas, mu, logvar, output_info, factor):
@@ -87,10 +87,10 @@ def _loss_function(recon_x, x, sigmas, mu, logvar, output_info, factor):
         for span_info in column_info:
             if span_info.activation_fn != 'softmax':
                 ed = st + span_info.dim
-                # std = sigmas[st]
-                # eq = x[:, st] - torch.tanh(recon_x[:, st])
-                loss.append(mse_loss(torch.tanh(recon_x[:, st]), x[:, st]))
-                # loss.append(torch.log(std) * x.size()[0])
+                std = sigmas[st]
+                eq = x[:, st] - torch.tanh(recon_x[:, st])
+                loss.append((eq ** 2 / 2 / (std ** 2)).sum())
+                loss.append(torch.log(std) * x.size()[0])
                 st = ed
 
             else:
@@ -151,7 +151,7 @@ class CustomTVAE(BaseSynthesizer):
 
     @random_state
     def fit(self, train_data, transformer: DataTransformer, val_data=None, early_stopping=False,
-            checkpoint_epochs=None, save_path=None, encoder_name=None, decoder_name=None):
+            save_path=None, encoder_name=None, decoder_name=None):
         """Fit the TVAE Synthesizer models to the training data.
 
         Args:
@@ -182,6 +182,7 @@ class CustomTVAE(BaseSynthesizer):
                                                encoder_name=encoder_name, 
                                                decoder_name=decoder_name)
 
+
         self.loss_values = pd.DataFrame(columns=['epoch', 'batch', 'loss', 'val_batch', 'val_loss'])
         
         iterator = tqdm(range(self.epochs), disable=(not self.verbose))
@@ -209,7 +210,7 @@ class CustomTVAE(BaseSynthesizer):
                 loss = loss_1 + loss_2
                 loss.backward()
                 optimizerAE.step()
-                # self.decoder.sigma.data.clamp_(0.01, 1.0)
+                self.decoder.sigma.data.clamp_(0.01, 1.0)
 
                 batch.append(id_)
                 loss_values.append(loss.detach().cpu().item())
@@ -235,8 +236,7 @@ class CustomTVAE(BaseSynthesizer):
 
                 val_batch.append(id_)
                 val_loss_values.append(loss.detach().cpu().item())
-            
-            # print(i, batch, len(loss_values), len(val_loss_values))
+                
             self._append_history(i, batch, loss_values, val_batch, val_loss_values)
                 
             # epoch_loss_df = pd.DataFrame({
@@ -246,7 +246,7 @@ class CustomTVAE(BaseSynthesizer):
             #     'val_loss': val_loss_values,
             # })
             # if not self.loss_values.empty:
-            #     self.loss_values = pd.concat[(
+            #     self.loss_values = pd.concat(
             #         [self.loss_values, epoch_loss_df]
             #     ).reset_index(drop=True)
             # else:
@@ -256,13 +256,7 @@ class CustomTVAE(BaseSynthesizer):
                 iterator.set_description(
                     iterator_description.format(
                         loss=loss.detach().cpu().item()))
-                
-            if checkpoint_epochs is not None:
-                # checkpoint
-                if i >= checkpoint_epochs and i % checkpoint_epochs == 0:
-                    torch.save(self.encoder.state_dict(), save_path + '/' + encoder_name + '_checkpoint_' + str(i) + '.pt')
-                    torch.save(self.decoder.state_dict(), save_path + '/' + decoder_name + '_checkpoint_' + str(i) + '.pt')
-                
+            
             # early stopping
             if early_stopping:
                  # Early stopping verification
@@ -323,7 +317,7 @@ class CustomTVAE(BaseSynthesizer):
 
         data = np.concatenate(data, axis=0)
         data = data[:samples]
-        return transformer.inverse_transform(data, None)
+        return transformer.inverse_transform(data, sigmas.detach().cpu().numpy())
 
     def set_device(self, device):
         """Set the `device` to be used ('GPU' or 'CPU)."""

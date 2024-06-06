@@ -128,3 +128,5 @@ explore_code.ipynb
 pyproject.toml
 setup.cfg
 tox.ini
+
+archive/

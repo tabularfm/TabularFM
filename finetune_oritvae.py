@@ -1,7 +1,7 @@
 import random
 import json
 from utils import *
-from ctgan.synthesizers.tvae import CustomTVAE
+from tabularfm.ctgan.synthesizers.tvae import CustomTVAE
 
 # entry
 # train
