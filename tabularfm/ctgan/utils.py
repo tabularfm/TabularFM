@@ -349,7 +349,6 @@ def load_model_weights(model_type, model, path, load_names=[]):
     if model_type in ['ctgan']:
         return load_model_weights_based_ctgan(model, path, load_names)
     
-    
 def load_model_weights_based_tvae(model: CustomTVAE, path: str, load_names=[]) -> CustomTVAE:
     import torch
     

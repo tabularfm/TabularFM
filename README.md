@@ -22,15 +22,27 @@ pip install -r requirements.txt
 
 # Usage
 
-Pretraining
+#### Pretraining
 ```python
-python tabularfm/pretrain.py -m <model_type> -d <datasets directory> -s <save dir>
+python tabularfm/pretrain.py -m <model_type> -d <datasets directory> -s <save directory> -c <pretraining configuration>
 ```
 
 Example:
 ```python
-python tabularfm/pretrain.py -m "stvae" -d "datasets/kaggle/" -s "result_stvae/" -c "tabularfm/configs/pt_stvae.yaml"
+python tabularfm/pretrain.py -m "stvae" -d "datasets/kaggle/" -s "pretrain_stvae/" -c "tabularfm/configs/pt_stvae.yaml"
 ```
+
+
+#### Finetuning
+```python
+python tabularfm/finetune.py -m <model_type> -d <datasets directory> -p <pretrained model directory>  -s <save directory> -c <finetuning configuration>
+```
+
+Example:
+```python
+python tabularfm/finetune.py -m "stvae" -d "datasets/kaggle/" -p "pretrain_stvae/" -s "finetune_stvae/" -c "tabularfm/configs/ft_stvae.yaml"
+```
+
 
 We support learning methods: `ctgan`, `tvae`, `stvae`, `stvaem`, `great`
 
