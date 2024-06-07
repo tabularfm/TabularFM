@@ -8,7 +8,7 @@
 
 <h1> TabularFM: An Open Framework For Tabular Foundational Models </h1>
 
-<span><a href="https://tabularfm.github.io" target="_blank">Official webite</a></span>
+<span><a href="https://tabularfm.github.io" target="_blank">Official webite & Leaderboards</a></span>
 </div>
 
 # Install the environment
