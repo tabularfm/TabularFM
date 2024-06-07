@@ -69,7 +69,7 @@ def create_model(model_type, model_config):
     
 def _create_model_cfg_based_tvae(data_path, configs, config_type):
     return {
-        "input_dim": get_max_input_dim(data_path),
+        "input_dim": get_max_input_dim(data_path) if config_type != "fromscratch" else None,
         "epochs": 1 if config_type == "pretrain" else configs['training_cfg']['epochs'],
         "batch_size": configs['training_cfg']['batch_size'],
         "lr": configs['training_cfg']['lr'],
@@ -81,7 +81,7 @@ def _create_model_cfg_based_tvae(data_path, configs, config_type):
     
 def _create_model_cfg_based_ctgan(data_path, configs, config_type):
     return {
-        "input_dim": get_max_input_dim(data_path),
+        "input_dim": get_max_input_dim(data_path) if config_type != "fromscratch" else None,
         "n_categories": get_max_n_categories(data_path),
         "epochs":  1 if config_type == "pretrain" else configs['training_cfg']['epochs'],
         "batch_size": configs['training_cfg']['batch_size'],

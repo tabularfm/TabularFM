@@ -46,6 +46,16 @@ python tabularfm/finetune.py -m "stvae" -d "datasets/kaggle/" -p "pretrain_stvae
 ```
 
 #### Single training
+```python
+python tabularfm/trainfromscratch.py -m <model_type> -d <datasets directory>  -s <save directory> -c <finetuning configuration>
+```
+
+Example:
+```python
+python tabularfm/trainfromscratch.py -m "stvae" -d "datasets/kaggle/" -s "fromscratch_stvae/" -c "tabularfm/configs/ft_stvae.yaml"
+```
+
+#### Evaluation
 *TBU*
 
 # Supported Datasets

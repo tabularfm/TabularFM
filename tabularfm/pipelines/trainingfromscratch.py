@@ -7,17 +7,16 @@ from sklearn.model_selection import train_test_split
 from be_great.great_dataset import GReaTDataset
 from ctgan.data_transformer import ColnameTransformer
 
-def proceed_finetune(list_data_paths, configs, model_config, model_type, data_path, save_path, pretrain_path):
+def proceed_train_from_scratch(list_data_paths, configs, model_config, model_type, data_path, save_path):
     if model_type in ['ctgan', 'tvae', 'stvae', 'stvaem']:
-        _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config, model_type, data_path, save_path, pretrain_path)
+        _proceed_train_from_scratch_based_ctgan_tvae(list_data_paths, configs, model_config, model_type, data_path, save_path)
 
     if model_type in ['great']:
-        _proceed_finetune_based_great(list_data_paths, configs, model_config, model_type, data_path, save_path, pretrain_path)
+        _proceed_train_from_scratch_finetune_based_great(list_data_paths, configs, model_config, model_type, data_path, save_path)
 
-def _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config, model_type, data_path, save_path, pretrain_path):
+def _proceed_train_from_scratch_based_ctgan_tvae(list_data_paths, configs, model_config, model_type, data_path, save_path):
     DATA_PATH = data_path
     SAVE_PATH = save_path
-    PRETRAIN_PATH = pretrain_path
     START_EPOCH = 0
     TOTAL_EPOCHS = configs['training_cfg']['epochs']
     CHECKPOINT_EPOCH = configs['training_cfg']['checkpoint_n_epoch']
@@ -37,15 +36,11 @@ def _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config, m
         
         path = os.path.join(DATA_PATH, path)
         
-        train_data, val_data = load_tensor_data_v3(path, 0.3, add_padding, 
-                                                    init_transformer=False, 
-                                                    **{'max_dim': model_config['input_dim']})
+        train_data, val_data = load_tensor_data_v3(path, 0.3)
         
         transformer = get_transformer_v3(path)
         
-        # load pretrained model
-        model = create_model(model_type, model_config)
-        model = load_model_weights(model_type, model, PRETRAIN_PATH)
+        
         
         ds_name = os.path.basename(path)
         
@@ -54,6 +49,9 @@ def _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config, m
             colname_texts = get_colname_df(path)
             colname_embeddings = colname_transformer.transform(colname_texts)
             colname_embeddings = colname_embeddings.detach().numpy().reshape(1, -1)
+            
+            model_config['input_dim'] = train_data.shape[1] + (len(colname_texts) * 768)    
+            model = create_model(model_type, model_config)
             
             model.fit(train_data, colname_embeddings, OPTIMIZE_COLUMN_NAME, transformer, val_data,
                     early_stopping=EARLY_STOPPING,
@@ -66,6 +64,9 @@ def _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config, m
                 save_model_weights(model_type, model, SAVE_PATH, suffix=ds_name)
                     
         else:
+            model_config['input_dim'] = train_data.shape[1]
+            model = create_model(model_type, model_config)
+            
             if model_type in ['ctgan']:
                 model.fit(train_data, transformer, val_data, 
                         early_stopping=False,
@@ -99,8 +100,7 @@ def _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config, m
     # save training history at each epoch    
     save_training_history(training_hist, SAVE_PATH)
     
-def _proceed_finetune_based_great(list_data_paths, configs, model_config, model_type, data_path, save_path, pretrain_path):
-    PRETRAIN_PATH = pretrain_path
+def _proceed_train_from_scratch_finetune_based_great(list_data_paths, configs, model_config, model_type, data_path, save_path):
     DATA_PATH = data_path
     SAVE_PATH = save_path
     training_hist = []
@@ -164,12 +164,8 @@ def _proceed_finetune_based_great(list_data_paths, configs, model_config, model_
         
         df, df_val = train_test_split(df, test_size=0.3, random_state=121)
         
-        # modify the model_config to get the pretrained model
-        pretrained_model_config = model_config.copy()
-        pretrained_model_config['pretrained_llm'] = os.path.join(PRETRAIN_PATH, 'weights')
-        
         # load pretrained model
-        model = create_model(model_type, pretrained_model_config)
+        model = create_model(model_type, model_config)
         model.init_column_info(df)
         
         try:
