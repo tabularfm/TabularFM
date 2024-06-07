@@ -22,6 +22,8 @@ pip install -r requirements.txt
 
 # Usage
 
+We support learning methods: `ctgan`, `tvae`, `stvae`, `stvaem`, `great`
+
 #### Pretraining
 ```python
 python tabularfm/pretrain.py -m <model_type> -d <datasets directory> -s <save directory> -c <pretraining configuration>
@@ -43,17 +45,15 @@ Example:
 python tabularfm/finetune.py -m "stvae" -d "datasets/kaggle/" -p "pretrain_stvae/" -s "finetune_stvae/" -c "tabularfm/configs/ft_stvae.yaml"
 ```
 
-
-We support learning methods: `ctgan`, `tvae`, `stvae`, `stvaem`, `great`
-
-
+#### Single training
+*TBU*
 
 # Supported Datasets
 * [Kaggle](https://drive.google.com/drive/folders/1HnRTMBbX9kTUiDZ4pjNSWaM5SJLUSULx?usp=drive_link)
 * [1M Gittables Datasets](https://drive.google.com/file/d/10jBLjilKI5MJ_qXyDKxJFfN9ez9y9ydv/view?usp=drive_link)
 
 
-# Note
+<!-- # Note
 * Set up directories before run the experiment
     * Create directory to store the result for each methods: `mkdir rs_<method_name>_<optional_info>/`
     * Inside the created directory, create directories for pretraining, finetune (val and test), singletrain (val and test)
@@ -156,4 +156,4 @@ We support learning methods: `ctgan`, `tvae`, `stvae`, `stvaem`, `great`
 * Replace `FINETUNE_PATH` and `SINGLETRAIN_PATH`
 * Replace `VAL_SCORE_PATH` and `TEST_SCORE_PATH` to show the socres
 
-# GReaT (TBU)
+# GReaT (TBU) -->
