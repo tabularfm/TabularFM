@@ -1,4 +1,5 @@
 split_path: 'toy_split_3sets.json' # None
+split_set: 'val'
 split_random_state: 121 # if split_path is None, split data following this random state
 verbose: True
 model_cfg:
@@ -11,3 +12,4 @@ training_cfg:
   lr: 1.e-4
   optimizers: 'adam'
   checkpoint_n_epoch: 20 # checkpoint every n epochs
+  early_stopping: True

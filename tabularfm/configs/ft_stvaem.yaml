@@ -1,4 +1,5 @@
 split_path: 'toy_split_3sets.json' # None
+split_set: 'val'
 split_random_state: 121 # if split_path is None, split data following this random state
 verbose: True
 model_cfg:
@@ -7,9 +8,10 @@ model_cfg:
   decoder_dims: [128, 256, 256, 512]
   pretrained_llm: 'distilbert-base-uncased' # pretrained llm model to embed column name as signature
 training_cfg:
-  epochs: 10
+  epochs: 3
   batch_size: 500
   lr: 1.e-4
   optimizers: 'adam'
   checkpoint_n_epoch: 20 # checkpoint every n epochs
   optimize_signature: False # whether to additionally optimize the signature or not
+  early_stopping: True

@@ -2,7 +2,7 @@ import os
 import gc
 import random
 from ctgan.utils import load_tensor_data_v3, get_transformer_v3, add_padding, merge_training_hist, get_training_hist, save_latest_training_info, save_training_history, save_model_weights, get_df, get_colname_df
-from transformers import AutoTokenizer, TrainingArguments, AutoModelForCausalLM
+from transformers import TrainingArguments
 from sklearn.model_selection import train_test_split
 from be_great.great_dataset import GReaTDataset
 from ctgan.data_transformer import ColnameTransformer
@@ -20,14 +20,15 @@ def _proceed_pretrain_based_ctgan_tvae(list_data_paths, configs, model_config, m
     START_EPOCH = 0
     TOTAL_EPOCHS = configs['training_cfg']['epochs']
     CHECKPOINT_EPOCH = configs['training_cfg']['checkpoint_n_epoch']
-    PRETRAINED_LLM = configs['model_cfg']['pretrained_llm']
-    OPTIMIZE_COLUMN_NAME = configs['training_cfg']['optimize_signature']
     
     # TODO: resume training
     training_hist = []
     
     if model_type == 'stvaem':
+        PRETRAINED_LLM = configs['model_cfg']['pretrained_llm']
         colname_transformer = ColnameTransformer(pretrained_model=PRETRAINED_LLM)
+        OPTIMIZE_COLUMN_NAME = configs['training_cfg']['optimize_signature']
+        
     
     for epoch in range(START_EPOCH, TOTAL_EPOCHS):
         print(f'EPOCH {epoch}')
@@ -59,7 +60,7 @@ def _proceed_pretrain_based_ctgan_tvae(list_data_paths, configs, model_config, m
                 model.fit(train_data, transformer, val_data)
             
             ds_name = os.path.basename(path)
-            training_hist = merge_training_hist(get_training_hist(model), ds_name, training_hist)
+            training_hist = merge_training_hist(get_training_hist(model_type, model), ds_name, training_hist)
             
             gc.collect()
             
@@ -142,7 +143,7 @@ def _proceed_pretrain_based_great(list_data_paths, configs, model_config, model,
             
             ds_name = os.path.basename(path)
             
-            training_hist = merge_training_hist(get_training_hist(great_trainer), ds_name, training_hist)
+            training_hist = merge_training_hist(get_training_hist(model_type, great_trainer), ds_name, training_hist)
         
         # save latested training info
         weight_temp_name = f'temp_weights'

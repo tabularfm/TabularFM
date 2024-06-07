@@ -151,7 +151,7 @@ class CustomTVAE(BaseSynthesizer):
 
     @random_state
     def fit(self, train_data, transformer: DataTransformer, val_data=None, early_stopping=False,
-            save_path=None, encoder_name=None, decoder_name=None):
+            checkpoint_epochs=None, save_path=None, encoder_name=None, decoder_name=None):
         """Fit the TVAE Synthesizer models to the training data.
 
         Args:

@@ -191,8 +191,12 @@ def load_tensor_data_v3(path, test_size=0.3, transform_func:callable=None, init_
     
     return train_data, val_data
 
-def get_training_hist(model: CustomTVAE) -> pd.DataFrame:
-    return model.loss_values
+def get_training_hist(model_type, obj) -> pd.DataFrame:
+    if model_type in ['ctgan', 'tvae', 'stvae', 'stvaem']:
+        return obj.loss_values
+    
+    if model_type in ['great']:
+        return pd.DataFrame(obj.state.log_history)
 
 # utils for training
 def get_max_input_dim(data_path, colname_dim=None):
@@ -338,8 +342,15 @@ def load_latest_training_info(path, filename=None):
     filename = 'latest_training' if filename is None else filename
     return json.load(open(os.path.join(path, f'{filename}.json'), 'r'))
     
+def load_model_weights(model_type, model, path, load_names=[]):
+    if model_type in ['tvae', 'stvae', 'stvaem']:
+        return load_model_weights_based_tvae(model, path, load_names)
+        
+    if model_type in ['ctgan']:
+        return load_model_weights_based_ctgan(model, path, load_names)
     
-def load_model_weights(model: CustomTVAE, path: str, load_names=[]) -> CustomTVAE:
+    
+def load_model_weights_based_tvae(model: CustomTVAE, path: str, load_names=[]) -> CustomTVAE:
     import torch
     
     if torch.cuda.is_available():
@@ -349,6 +360,9 @@ def load_model_weights(model: CustomTVAE, path: str, load_names=[]) -> CustomTVA
         else:
             model.encoder.load_state_dict(torch.load(os.path.join(path, str(load_names[0]) + '.pt')))
             model.decoder.load_state_dict(torch.load(os.path.join(path, str(load_names[1]) + '.pt')))
+            
+        return model
+    
     else:
         if len(load_names) == 0:
             model.encoder.load_state_dict(torch.load(os.path.join(path, 'encoder_weights.pt')))
@@ -357,9 +371,9 @@ def load_model_weights(model: CustomTVAE, path: str, load_names=[]) -> CustomTVA
             model.encoder.load_state_dict(torch.load(os.path.join(path, str(load_names[0]) + '.pt'), map_location=torch.device('cpu')))
             model.decoder.load_state_dict(torch.load(os.path.join(path, str(load_names[1]) + '.pt'), map_location=torch.device('cpu')))
     
-    return model
+        return model
 
-def load_gan_model_weights(model: CustomCTGAN, path: str, load_names=[]) -> CustomCTGAN:
+def load_model_weights_based_ctgan(model: CustomCTGAN, path: str, load_names=[]) -> CustomCTGAN:
     import torch
     
     if len(load_names) == 0:
@@ -370,6 +384,7 @@ def load_gan_model_weights(model: CustomCTGAN, path: str, load_names=[]) -> Cust
         model._discriminator.load_state_dict(torch.load(os.path.join(path, str(load_names[1]) + '.pt')))
     
     return model
+    
 
 # utils
 
