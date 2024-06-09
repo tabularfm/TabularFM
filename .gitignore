@@ -122,6 +122,7 @@ report_*
 split.json
 # split_3sets.json
 explore_code.ipynb
+exp_design.ipynb
 
 .editorconfig
 .github/
@@ -134,3 +135,4 @@ mlruns/
 *_pt/
 *_st/
 *_ft/
+*_scores/

@@ -342,45 +342,52 @@ def load_latest_training_info(path, filename=None):
     filename = 'latest_training' if filename is None else filename
     return json.load(open(os.path.join(path, f'{filename}.json'), 'r'))
     
-def load_model_weights(model_type, model, path, load_names=[]):
+# def load_model_weights(model_type, model, path, load_names=[]):
+#     if model_type in ['tvae', 'stvae', 'stvaem']:
+#         return load_model_weights_based_tvae(model, path, load_names)
+        
+#     if model_type in ['ctgan']:
+#         return load_model_weights_based_ctgan(model, path, load_names)
+    
+def load_model_weights(model_type, model, path, suffix):
     if model_type in ['tvae', 'stvae', 'stvaem']:
-        return load_model_weights_based_tvae(model, path, load_names)
+        return load_model_weights_based_tvae(model, path, suffix)
         
     if model_type in ['ctgan']:
-        return load_model_weights_based_ctgan(model, path, load_names)
+        return load_model_weights_based_ctgan(model, path, suffix)
     
-def load_model_weights_based_tvae(model: CustomTVAE, path: str, load_names=[]) -> CustomTVAE:
+def load_model_weights_based_tvae(model: CustomTVAE, path: str, suffix=None) -> CustomTVAE:
     import torch
     
     if torch.cuda.is_available():
-        if len(load_names) == 0:
+        if suffix is None:
             model.encoder.load_state_dict(torch.load(os.path.join(path, 'encoder_weights.pt')))
             model.decoder.load_state_dict(torch.load(os.path.join(path, 'decoder_weights.pt')))
         else:
-            model.encoder.load_state_dict(torch.load(os.path.join(path, str(load_names[0]) + '.pt')))
-            model.decoder.load_state_dict(torch.load(os.path.join(path, str(load_names[1]) + '.pt')))
+            model.encoder.load_state_dict(torch.load(os.path.join(path, f'encoder_{suffix}.pt')))
+            model.decoder.load_state_dict(torch.load(os.path.join(path, f'decoder_{suffix}.pt')))
             
         return model
     
     else:
-        if len(load_names) == 0:
+        if suffix is None:
             model.encoder.load_state_dict(torch.load(os.path.join(path, 'encoder_weights.pt')))
             model.decoder.load_state_dict(torch.load(os.path.join(path, 'decoder_weights.pt')))
         else:
-            model.encoder.load_state_dict(torch.load(os.path.join(path, str(load_names[0]) + '.pt'), map_location=torch.device('cpu')))
-            model.decoder.load_state_dict(torch.load(os.path.join(path, str(load_names[1]) + '.pt'), map_location=torch.device('cpu')))
+            model.encoder.load_state_dict(torch.load(os.path.join(path, f'encoder_{suffix}.pt'), map_location=torch.device('cpu')))
+            model.decoder.load_state_dict(torch.load(os.path.join(path, f'decoder_{suffix}.pt'), map_location=torch.device('cpu')))
     
         return model
 
-def load_model_weights_based_ctgan(model: CustomCTGAN, path: str, load_names=[]) -> CustomCTGAN:
+def load_model_weights_based_ctgan(model: CustomCTGAN, path: str, suffix=None) -> CustomCTGAN:
     import torch
     
-    if len(load_names) == 0:
+    if suffix is None:
         model._generator.load_state_dict(torch.load(os.path.join(path, 'generator_weights.pt')))
         model._discriminator.load_state_dict(torch.load(os.path.join(path, 'discriminator_weights.pt')))
     else:
-        model._generator.load_state_dict(torch.load(os.path.join(path, str(load_names[0]) + '.pt')))
-        model._discriminator.load_state_dict(torch.load(os.path.join(path, str(load_names[1]) + '.pt')))
+        model._generator.load_state_dict(torch.load(os.path.join(path, f'generator_{suffix}.pt')))
+        model._discriminator.load_state_dict(torch.load(os.path.join(path, f'discriminator_{suffix}.pt')))
     
     return model
     

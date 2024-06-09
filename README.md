@@ -24,7 +24,7 @@ pip install -r requirements.txt
 
 We support learning methods: `ctgan`, `tvae`, `stvae`, `stvaem`, `great`
 
-#### Pretraining
+### Pretraining
 ```python
 python tabularfm/pretrain.py -m <model_type> -d <datasets directory> -s <save directory> -c <configuration file>
 ```
@@ -35,7 +35,7 @@ python tabularfm/pretrain.py -m "stvae" -d "datasets/kaggle/" -s "pretrain_stvae
 ```
 
 
-#### Finetuning
+### Finetuning
 ```python
 python tabularfm/finetune.py -m <model_type> -d <datasets directory> -p <pretrained model directory>  -s <save directory> -c <configuration file>
 ```
@@ -45,7 +45,7 @@ Example:
 python tabularfm/finetune.py -m "stvae" -d "datasets/kaggle/" -p "pretrain_stvae/" -s "finetune_stvae/" -c "tabularfm/configs/stvae.yaml"
 ```
 
-#### Single training
+### Single training
 ```python
 python tabularfm/trainfromscratch.py -m <model_type> -d <datasets directory>  -s <save directory> -c <configuration file>
 ```
@@ -55,7 +55,19 @@ Example:
 python tabularfm/trainfromscratch.py -m "stvae" -d "datasets/kaggle/" -s "fromscratch_stvae/" -c "tabularfm/configs/stvae.yaml"
 ```
 
-#### Evaluation
+### Evaluation
+
+#### Scoring
+```python
+python tabularfm/evaluate.py -m <model_type> -ft <finetuning directory> -fs <trainign from scratch directory> -d <datasets directory>  -s <save directory> -c <configuration file>
+```
+
+Example:
+```python
+python tabularfm/trainfromscratch.py -m "stvae" -ft "finetune_stvae" -fs "fromscratch_stvae" -d "datasets/kaggle/" -s "scores_stvae/" -c "tabularfm/configs/stvae.yaml"
+```
+
+#### Visualization
 *TBU*
 
 # Supported Datasets
