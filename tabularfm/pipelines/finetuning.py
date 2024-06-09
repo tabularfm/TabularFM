@@ -19,9 +19,9 @@ def _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config, m
     SAVE_PATH = save_path
     PRETRAIN_PATH = pretrain_path
     START_EPOCH = 0
-    TOTAL_EPOCHS = configs['training_cfg']['epochs']
-    CHECKPOINT_EPOCH = configs['training_cfg']['checkpoint_n_epoch']
-    EARLY_STOPPING = configs['training_cfg']['early_stopping']
+    TOTAL_EPOCHS = configs['finetune_cfg']['epochs']
+    # CHECKPOINT_EPOCH = configs['finetune_cfg']['checkpoint_n_epoch']
+    EARLY_STOPPING = configs['finetune_cfg']['early_stopping'] if model_type != 'ctgan' else None
     
     # TODO: resume training
     training_hist = []
@@ -29,7 +29,7 @@ def _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config, m
     if model_type == 'stvaem':
         PRETRAINED_LLM = configs['model_cfg']['pretrained_llm']
         colname_transformer = ColnameTransformer(pretrained_model=PRETRAINED_LLM)
-        OPTIMIZE_COLUMN_NAME = configs['training_cfg']['optimize_signature']
+        OPTIMIZE_COLUMN_NAME = configs['finetune_cfg']['optimize_signature']
     
     for i, path in enumerate(list_data_paths):
         
@@ -105,18 +105,18 @@ def _proceed_finetune_based_great(list_data_paths, configs, model_config, model_
     SAVE_PATH = save_path
     training_hist = []
     START_EPOCH = 0
-    TOTAL_EPOCHS = configs['training_cfg']['epochs']
-    CHECKPOINT_EPOCH = configs['training_cfg']['checkpoint_n_epoch']
-    EARLY_STOPPING = configs['training_cfg']['early_stopping']
+    TOTAL_EPOCHS = configs['finetune_cfg']['epochs']
+    # CHECKPOINT_EPOCH = configs['finetune_cfg']['checkpoint_n_epoch']
+    EARLY_STOPPING = configs['finetune_cfg']['early_stopping']
         
     
     training_args = TrainingArguments(
             output_dir=SAVE_PATH,
             save_strategy="no",
-            learning_rate=configs['training_cfg']['lr'],
-            num_train_epochs=configs['training_cfg']['epochs'],
-            per_device_train_batch_size=configs['training_cfg']['batch_size'],
-            per_device_eval_batch_size=configs['training_cfg']['batch_size'],
+            learning_rate=configs['finetune_cfg']['lr'],
+            num_train_epochs=configs['finetune_cfg']['epochs'],
+            per_device_train_batch_size=configs['finetune_cfg']['batch_size'],
+            per_device_eval_batch_size=configs['finetune_cfg']['batch_size'],
             logging_strategy='epoch',
             do_eval=True,
             evaluation_strategy='epoch',
@@ -131,9 +131,9 @@ def _proceed_finetune_based_great(list_data_paths, configs, model_config, model_
             training_args = TrainingArguments(
                 dataset_save_path,
                 save_strategy='no',
-                num_train_epochs=configs['training_cfg']['epochs'],
-                per_device_train_batch_size=configs['training_cfg']['batch_size'],
-                per_device_eval_batch_size=configs['training_cfg']['batch_size'],
+                num_train_epochs=configs['finetune_cfg']['epochs'],
+                per_device_train_batch_size=configs['finetune_cfg']['batch_size'],
+                per_device_eval_batch_size=configs['finetune_cfg']['batch_size'],
                 logging_strategy='epoch',
                 do_eval=True,
                 evaluation_strategy='epoch',
@@ -143,9 +143,9 @@ def _proceed_finetune_based_great(list_data_paths, configs, model_config, model_
             training_args = TrainingArguments(
                 output_dir=dataset_save_path,
                 save_strategy='epoch',
-                num_train_epochs=configs['training_cfg']['epochs'],
-                per_device_train_batch_size=configs['training_cfg']['batch_size'],
-                per_device_eval_batch_size=configs['training_cfg']['batch_size'],
+                num_train_epochs=configs['finetune_cfg']['epochs'],
+                per_device_train_batch_size=configs['finetune_cfg']['batch_size'],
+                per_device_eval_batch_size=configs['finetune_cfg']['batch_size'],
                 logging_strategy='epoch',
                 do_eval=True,
                 evaluation_strategy='epoch',

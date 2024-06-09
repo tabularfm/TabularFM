@@ -26,33 +26,33 @@ We support learning methods: `ctgan`, `tvae`, `stvae`, `stvaem`, `great`
 
 #### Pretraining
 ```python
-python tabularfm/pretrain.py -m <model_type> -d <datasets directory> -s <save directory> -c <pretraining configuration>
+python tabularfm/pretrain.py -m <model_type> -d <datasets directory> -s <save directory> -c <configuration file>
 ```
 
 Example:
 ```python
-python tabularfm/pretrain.py -m "stvae" -d "datasets/kaggle/" -s "pretrain_stvae/" -c "tabularfm/configs/pt_stvae.yaml"
+python tabularfm/pretrain.py -m "stvae" -d "datasets/kaggle/" -s "pretrain_stvae/" -c "tabularfm/configs/stvae.yaml"
 ```
 
 
 #### Finetuning
 ```python
-python tabularfm/finetune.py -m <model_type> -d <datasets directory> -p <pretrained model directory>  -s <save directory> -c <finetuning configuration>
+python tabularfm/finetune.py -m <model_type> -d <datasets directory> -p <pretrained model directory>  -s <save directory> -c <configuration file>
 ```
 
 Example:
 ```python
-python tabularfm/finetune.py -m "stvae" -d "datasets/kaggle/" -p "pretrain_stvae/" -s "finetune_stvae/" -c "tabularfm/configs/ft_stvae.yaml"
+python tabularfm/finetune.py -m "stvae" -d "datasets/kaggle/" -p "pretrain_stvae/" -s "finetune_stvae/" -c "tabularfm/configs/stvae.yaml"
 ```
 
 #### Single training
 ```python
-python tabularfm/trainfromscratch.py -m <model_type> -d <datasets directory>  -s <save directory> -c <finetuning configuration>
+python tabularfm/trainfromscratch.py -m <model_type> -d <datasets directory>  -s <save directory> -c <configuration file>
 ```
 
 Example:
 ```python
-python tabularfm/trainfromscratch.py -m "stvae" -d "datasets/kaggle/" -s "fromscratch_stvae/" -c "tabularfm/configs/ft_stvae.yaml"
+python tabularfm/trainfromscratch.py -m "stvae" -d "datasets/kaggle/" -s "fromscratch_stvae/" -c "tabularfm/configs/stvae.yaml"
 ```
 
 #### Evaluation

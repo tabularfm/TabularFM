@@ -18,8 +18,8 @@ def _proceed_pretrain_based_ctgan_tvae(list_data_paths, configs, model_config, m
     DATA_PATH = data_path
     SAVE_PATH = save_path
     START_EPOCH = 0
-    TOTAL_EPOCHS = configs['training_cfg']['epochs']
-    CHECKPOINT_EPOCH = configs['training_cfg']['checkpoint_n_epoch']
+    TOTAL_EPOCHS = configs['pretrain_cfg']['epochs']
+    CHECKPOINT_EPOCH = configs['pretrain_cfg']['checkpoint_n_epoch']
     
     # TODO: resume training
     training_hist = []
@@ -27,7 +27,7 @@ def _proceed_pretrain_based_ctgan_tvae(list_data_paths, configs, model_config, m
     if model_type == 'stvaem':
         PRETRAINED_LLM = configs['model_cfg']['pretrained_llm']
         colname_transformer = ColnameTransformer(pretrained_model=PRETRAINED_LLM)
-        OPTIMIZE_COLUMN_NAME = configs['training_cfg']['optimize_signature']
+        OPTIMIZE_COLUMN_NAME = configs['pretrain_cfg']['optimize_signature']
         
     
     for epoch in range(START_EPOCH, TOTAL_EPOCHS):
@@ -84,16 +84,16 @@ def _proceed_pretrain_based_great(list_data_paths, configs, model_config, model,
     SAVE_PATH = save_path
     training_hist = []
     START_EPOCH = 0
-    TOTAL_EPOCHS = configs['training_cfg']['epochs']
-    CHECKPOINT_EPOCH = configs['training_cfg']['checkpoint_n_epoch']
+    TOTAL_EPOCHS = configs['pretrain_cfg']['epochs']
+    CHECKPOINT_EPOCH = configs['pretrain_cfg']['checkpoint_n_epoch']
     
     training_args = TrainingArguments(
             output_dir=SAVE_PATH,
             save_strategy="no",
-            learning_rate=configs['training_cfg']['lr'],
-            num_train_epochs=configs['training_cfg']['epochs'],
-            per_device_train_batch_size=configs['training_cfg']['batch_size'],
-            per_device_eval_batch_size=configs['training_cfg']['batch_size'],
+            learning_rate=configs['pretrain_cfg']['lr'],
+            num_train_epochs=configs['pretrain_cfg']['epochs'],
+            per_device_train_batch_size=configs['pretrain_cfg']['batch_size'],
+            per_device_eval_batch_size=configs['pretrain_cfg']['batch_size'],
             logging_strategy='epoch',
             do_eval=True,
             evaluation_strategy='epoch',

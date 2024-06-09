@@ -6,10 +6,21 @@ model_cfg:
   pretrained_llm: 'distilgpt2'
   pretrained_tokenizer: 'distilgpt2'
   token_max_length: 512
-training_cfg:
+pretrain_cfg:
   epochs: 2
   batch_size: 32
   lr: 1.e-4
   optimizers: 'adam'
   checkpoint_n_epoch: 20 # checkpoint every n epochs
+finetune_cfg:
+  epochs: 2
+  batch_size: 32
+  lr: 1.e-4
+  optimizers: 'adam'
+  early_stopping: True
+fromscratch_cfg:
+  epochs: 2
+  batch_size: 32
+  lr: 1.e-4
+  optimizers: 'adam'
   early_stopping: True

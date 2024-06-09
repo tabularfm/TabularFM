@@ -68,40 +68,115 @@ def create_model(model_type, model_config):
     
     
 def _create_model_cfg_based_tvae(data_path, configs, config_type):
-    return {
-        "input_dim": get_max_input_dim(data_path) if config_type != "fromscratch" else None,
-        "epochs": 1 if config_type == "pretrain" else configs['training_cfg']['epochs'],
-        "batch_size": configs['training_cfg']['batch_size'],
-        "lr": configs['training_cfg']['lr'],
-        "embedding_dim": configs['model_cfg']['embedding_dim'],
-        "compress_dims": configs['model_cfg']['encoder_dims'],
-        "decompress_dims": configs['model_cfg']['decoder_dims'],
-        "verbose": configs['verbose']
-    }
+    if config_type == 'pretrain':
+        return {
+            "input_dim": get_max_input_dim(data_path),
+            "epochs": 1,
+            "batch_size": configs['pretrain_cfg']['batch_size'],
+            "lr": configs['pretrain_cfg']['lr'],
+            "embedding_dim": configs['model_cfg']['embedding_dim'],
+            "compress_dims": configs['model_cfg']['encoder_dims'],
+            "decompress_dims": configs['model_cfg']['decoder_dims'],
+            "verbose": configs['verbose']
+        }   
     
+    if config_type == 'finetune':
+        return {
+            "input_dim": get_max_input_dim(data_path),
+            "epochs": configs['finetune_cfg']['epochs'],
+            "batch_size": configs['finetune_cfg']['batch_size'],
+            "lr": configs['finetune_cfg']['lr'],
+            "embedding_dim": configs['model_cfg']['embedding_dim'],
+            "compress_dims": configs['model_cfg']['encoder_dims'],
+            "decompress_dims": configs['model_cfg']['decoder_dims'],
+            "verbose": configs['verbose']
+        }
+    
+    if config_type == 'fromscratch':
+        return {
+            "input_dim": None,
+            "epochs": configs['fromscratch_cfg']['epochs'],
+            "batch_size": configs['fromscratch_cfg']['batch_size'],
+            "lr": configs['fromscratch_cfg']['lr'],
+            "embedding_dim": configs['model_cfg']['embedding_dim'],
+            "compress_dims": configs['model_cfg']['encoder_dims'],
+            "decompress_dims": configs['model_cfg']['decoder_dims'],
+            "verbose": configs['verbose']
+        }
+           
 def _create_model_cfg_based_ctgan(data_path, configs, config_type):
-    return {
-        "input_dim": get_max_input_dim(data_path) if config_type != "fromscratch" else None,
-        "n_categories": get_max_n_categories(data_path),
-        "epochs":  1 if config_type == "pretrain" else configs['training_cfg']['epochs'],
-        "batch_size": configs['training_cfg']['batch_size'],
-        "generator_lr": configs['training_cfg']['generator_lr'],
-        "discriminator_lr": configs['training_cfg']['discriminator_lr'],
-        "embedding_dim": configs['model_cfg']['embedding_dim'],
-        "generator_dim": configs['model_cfg']['generator_dims'],
-        "discriminator_dim": configs['model_cfg']['discriminator_dims'],
-        "verbose": configs['verbose']
-    }
+    if config_type == 'pretrain':
+        return {
+            "input_dim": get_max_input_dim(data_path),
+            "n_categories": get_max_n_categories(data_path),
+            "epochs":  1,
+            "batch_size": configs['pretrain_cfg']['batch_size'],
+            "generator_lr": configs['pretrain_cfg']['generator_lr'],
+            "discriminator_lr": configs['pretrain_cfg']['discriminator_lr'],
+            "embedding_dim": configs['model_cfg']['embedding_dim'],
+            "generator_dim": configs['model_cfg']['generator_dims'],
+            "discriminator_dim": configs['model_cfg']['discriminator_dims'],
+            "verbose": configs['verbose']
+        }
+    
+    if config_type == 'finetune':
+        return {
+            "input_dim": get_max_input_dim(data_path),
+            "n_categories": get_max_n_categories(data_path),
+            "epochs":  configs['finetune_cfg']['epochs'],
+            "batch_size": configs['finetune_cfg']['batch_size'],
+            "generator_lr": configs['finetune_cfg']['generator_lr'],
+            "discriminator_lr": configs['finetune_cfg']['discriminator_lr'],
+            "embedding_dim": configs['model_cfg']['embedding_dim'],
+            "generator_dim": configs['model_cfg']['generator_dims'],
+            "discriminator_dim": configs['model_cfg']['discriminator_dims'],
+            "verbose": configs['verbose']
+        }
+        
+    if config_type == 'fromscratch':
+        return {
+            "input_dim": None,
+            "n_categories": get_max_n_categories(data_path),
+            "epochs":  configs['fromscratch_cfg']['epochs'],
+            "batch_size": configs['fromscratch_cfg']['batch_size'],
+            "generator_lr": configs['fromscratch_cfg']['generator_lr'],
+            "discriminator_lr": configs['fromscratch_cfg']['discriminator_lr'],
+            "embedding_dim": configs['model_cfg']['embedding_dim'],
+            "generator_dim": configs['model_cfg']['generator_dims'],
+            "discriminator_dim": configs['model_cfg']['discriminator_dims'],
+            "verbose": configs['verbose']
+        }
     
 def _create_model_cfg_based_great(data_path, configs, config_type):
-    return {
-        "pretrained_llm": configs['model_cfg']['pretrained_llm'],
-        "pretrained_tokenizer": configs['model_cfg']['pretrained_tokenizer'],
-        "epochs": 1 if config_type == "pretrain" else configs['training_cfg']['epochs'],
-        "batch_size": configs['training_cfg']['batch_size'],
-        "model_max_length": configs['model_cfg']['token_max_length'],
-        "verbose": configs['verbose']
-    }
+    if config_type == 'pretrain':
+        return {
+            "pretrained_llm": configs['model_cfg']['pretrained_llm'],
+            "pretrained_tokenizer": configs['model_cfg']['pretrained_tokenizer'],
+            "epochs": 1,
+            "batch_size": configs['pretrain_cfg']['batch_size'],
+            "model_max_length": configs['model_cfg']['token_max_length'],
+            "verbose": configs['verbose']
+        }
+        
+    if config_type == 'finetune':
+        return {
+            "pretrained_llm": configs['model_cfg']['pretrained_llm'],
+            "pretrained_tokenizer": configs['model_cfg']['pretrained_tokenizer'],
+            "epochs": configs['finetune_cfg']['epochs'],
+            "batch_size": configs['finetune_cfg']['batch_size'],
+            "model_max_length": configs['model_cfg']['token_max_length'],
+            "verbose": configs['verbose']
+        }
+        
+    if config_type == 'fromscratch':
+        return {
+            "pretrained_llm": configs['model_cfg']['pretrained_llm'],
+            "pretrained_tokenizer": configs['model_cfg']['pretrained_tokenizer'],
+            "epochs": configs['fromscratch_cfg']['epochs'],
+            "batch_size": configs['fromscratch_cfg']['batch_size'],
+            "model_max_length": configs['model_cfg']['token_max_length'],
+            "verbose": configs['verbose']
+        }
     
 def _create_model_stvae(configs):
     return STVAE(**configs)

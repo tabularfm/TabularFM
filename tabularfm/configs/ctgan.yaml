@@ -1,16 +1,29 @@
 split_path: 'toy_split_3sets.json' # None
-split_set: 'val'
+split_set: 'val' # 'val', 'test', or leave empty
 split_random_state: 121 # if split_path is None, split data following this random state
 verbose: True
 model_cfg:
   embedding_dim: 128
   generator_dims: [512, 256, 256, 128]
   discriminator_dims: [128, 256, 256, 512]
-training_cfg:
+pretrain_cfg:
   epochs: 3
   batch_size: 500
   generator_lr: 1.e-4
   discriminator_lr: 1.e-4
   optimizers: 'adam'
   checkpoint_n_epoch: 20 # checkpoint every n epochs
-  early_stopping: False
+finetune_cfg:
+  epochs: 3
+  batch_size: 500
+  generator_lr: 1.e-4
+  discriminator_lr: 1.e-4
+  optimizers: 'adam'
+  # checkpoint_n_epoch: 20 # checkpoint every n epochs
+fromscratch_cfg:
+  epochs: 3
+  batch_size: 500
+  generator_lr: 1.e-4
+  discriminator_lr: 1.e-4
+  optimizers: 'adam'
+  # checkpoint_n_epoch: 20 # checkpoint every n epochs

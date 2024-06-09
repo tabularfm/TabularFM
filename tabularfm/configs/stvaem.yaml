@@ -7,8 +7,23 @@ model_cfg:
   encoder_dims: [512, 256, 256, 128]
   decoder_dims: [128, 256, 256, 512]
   pretrained_llm: 'distilbert-base-uncased' # pretrained llm model to embed column name as signature
-training_cfg:
-  epochs: 3
+pretrain_cfg:
+  epochs: 10
+  batch_size: 500
+  lr: 1.e-4
+  optimizers: 'adam'
+  checkpoint_n_epoch: 20 # checkpoint every n epochs
+  optimize_signature: False # whether to additionally optimize the signature or not
+finetune_cfg:
+  epochs: 10
+  batch_size: 500
+  lr: 1.e-4
+  optimizers: 'adam'
+  checkpoint_n_epoch: 20 # checkpoint every n epochs
+  optimize_signature: False # whether to additionally optimize the signature or not
+  early_stopping: True
+fromscratch_cfg:
+  epochs: 10
   batch_size: 500
   lr: 1.e-4
   optimizers: 'adam'
