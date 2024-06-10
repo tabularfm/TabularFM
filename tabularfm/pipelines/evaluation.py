@@ -1,16 +1,17 @@
 import os
-from ctgan.utils import get_df, get_transformer_v3, get_metadata, load_model_weights, filter_metdata, scoring, add_score_df, get_colname_df, load_tensor_data_v3, add_padding
+from ctgan.utils import get_df, get_transformer_v3, get_metadata, load_model_weights, filter_metdata, scoring, add_score_df, get_colname_df, load_tensor_data_v3, add_padding, merge_column_shapes, merge_column_pairs
 from ctgan.data_transformer import ColnameTransformer
 from sklearn.model_selection import train_test_split
 from utils import create_model
+import pandas as pd
 
 
 def proceed_scoring(list_data_paths, configs, model_config_finetune, model_config_fromscratch, model_type, data_path, finetune_path, fromscratch_path, save_path):
     if model_type in ['ctgan', 'tvae', 'stvae', 'stvaem']:
-        _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config_finetune, model_config_fromscratch, model_type, data_path, finetune_path, fromscratch_path, save_path)
+        return _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config_finetune, model_config_fromscratch, model_type, data_path, finetune_path, fromscratch_path, save_path)
         
     if model_type in ['great']:
-        _proceed_finetune_based_great(list_data_paths, configs, model_config_finetune, model_config_fromscratch, model_type, data_path, finetune_path, fromscratch_path, save_path)
+        return _proceed_finetune_based_great(list_data_paths, configs, model_config_finetune, model_config_fromscratch, model_type, data_path, finetune_path, fromscratch_path, save_path)
         
 def _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config_finetune, model_config_fromscratch, model_type, data_path, finetune_path, fromscratch_path, save_path):
     DATA_PATH = data_path
@@ -18,6 +19,9 @@ def _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config_fi
     
     ft_merged_df = []
     st_merged_df = []
+    
+    list_df_shapes = []
+    list_df_pairs = []
 
     for ds in list_data_paths:
         # path
@@ -79,6 +83,9 @@ def _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config_fi
         ft_merged_df = add_score_df(ft_report, ds, ft_merged_df)
         st_merged_df = add_score_df(st_report, ds, st_merged_df)
         
+        list_df_shapes.append(merge_column_shapes(ft_report, st_report, ds))
+        list_df_pairs.append(merge_column_pairs(ft_report, st_report, ds))
+        
     # merge scores
     score_df = ft_merged_df.merge(st_merged_df, on='dataset', suffixes=['_ft', '_st'])
         
@@ -89,7 +96,13 @@ def _proceed_finetune_based_ctgan_tvae(list_data_paths, configs, model_config_fi
 
     score_df.to_csv(SCORE_SAVE_PATH)
     
-def _proceed_finetune_based_great(list_data_paths, configs, model_config_finetune, model_config_fromscratch, model_type, data_path, finetune_path, fromscratch_path, save_path):
+    
+    df_shapes = pd.concat(list_df_shapes) if len(list_df_shapes) > 0 else None
+    df_pairs = pd.concat(list_df_pairs) if len(list_df_pairs) > 0 else None
+    
+    return df_shapes, df_pairs
+    
+def _proceed_finetune_based_great(list_data_paths, configs, model_config_finetune, model_config_fromscratch, model_type, data_path, finetune_path, fromscratch_path, save_path, colshape_viz, colpair_viz):
     DATA_PATH = data_path
     SCORE_SAVE_PATH = save_path
     
