@@ -11,6 +11,8 @@
 <span><a href="https://tabularfm.github.io" target="_blank">Official webite & Leaderboards</a></span>
 </div>
 
+TabularFM is an end-to-end framework for Tabular Foundational Models. We provide functions to train, finetune, evaluate on large amount of tabular datasets and tools to visualize and analyze foundational models. A wide range of learning methods are also supported. We have released leaderboards for Tabular Foundation Models, [visit our website](https://tabularfm.github.io) for more details. 
+
 # Install the environment
 
 ```python
