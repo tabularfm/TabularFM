@@ -13,7 +13,7 @@ from tqdm import tqdm
 from ctgan.data_sampler import DataSampler
 from ctgan.data_transformer import DataTransformer
 from ctgan.synthesizers.base import BaseSynthesizer, random_state
-import tabularfm.ctgan.processing as processing
+import utils.processing as processing
 
 
 class Discriminator(Module):

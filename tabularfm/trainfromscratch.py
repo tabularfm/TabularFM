@@ -9,9 +9,15 @@ def train_from_scratch_model(model_type, data_path, save_path, config_path, resu
     
     configs = get_config(config_path)
     model_config = create_model_config(data_path, configs, model_type, config_type)
-    list_data_paths = get_finetune_paths(configs)
+    val_paths, test_paths = get_finetune_paths(data_path, configs)
     
-    proceed_train_from_scratch(list_data_paths, configs, model_config, model_type, data_path, save_path)
+    if val_paths is not None:
+        print('Process validation set')
+        proceed_train_from_scratch(val_paths, configs, model_config, model_type, data_path, save_path)
+        
+    if test_paths is not None:
+        print('Process testing set')
+        proceed_train_from_scratch(test_paths, configs, model_config, model_type, data_path, save_path)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

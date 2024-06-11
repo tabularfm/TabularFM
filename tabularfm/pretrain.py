@@ -2,6 +2,7 @@ import os
 import shutil
 import argparse
 from utils.cli import get_config, create_model_config, create_model, get_pretrain_paths
+from utils.processing import split_data
 from pipelines.pretraining import proceed_pretrain
 
 def pretrain_model(model_type, data_path, save_path, config_path, resume):
@@ -11,7 +12,8 @@ def pretrain_model(model_type, data_path, save_path, config_path, resume):
     configs = get_config(config_path)
     model_config = create_model_config(data_path, configs, model_type, config_type)
     model = create_model(model_type, model_config)
-    list_data_paths = get_pretrain_paths(configs)
+        
+    list_data_paths = get_pretrain_paths(data_path, configs)
     
     proceed_pretrain(list_data_paths, configs, model_config, model, model_type, data_path, save_path)
 

@@ -1,5 +1,6 @@
 split_path: 'toy_split_3sets.json' # None
-split_set: 'val' # name of split, if empty, run all sets (val, test)
+split_set: # name of split, if empty, run all sets (val, test)
+split_ratio: [0.8, 0.1, 0.1]
 split_random_state: 121 # if split_path is None, split data following this random state
 verbose: True
 model_cfg:

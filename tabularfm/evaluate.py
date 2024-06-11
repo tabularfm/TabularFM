@@ -10,21 +10,35 @@ def evaluate(model_type, data_path, finetune_path, fromscratch_path, save_path, 
     configs = get_config(config_path)
     model_config_finetune = create_model_config(data_path, configs, model_type, config_type = "finetune")
     model_config_fromscratch = create_model_config(data_path, configs, model_type, config_type = "fromscratch")
-    list_data_paths = get_finetune_paths(configs)
+    val_paths, test_paths = get_finetune_paths(data_path, configs)
     
-    if configs['split_set'] is not None:
-        score_save_path = os.path.join(save_path, f"score_{configs['split_set']}.csv")
-    else:
-        # TODO
-        pass
-    
-    df_shapes, df_pairs = proceed_scoring(list_data_paths, configs, model_config_finetune, model_config_fromscratch, model_type, data_path, finetune_path, fromscratch_path, score_save_path)
-    
-    if viz_colshape and configs['split_set'] is not None:
-        visualize_colshape(model_type, configs['split_set'], df_shapes, save_path)
+    if val_paths is not None:
+        print('Process validation set')
+        split_set = 'val'
         
-    if viz_colpair:
-        visualize_colpair(model_type, configs['split_set'], df_pairs, save_path)
+        score_save_path = os.path.join(save_path, f"score_{split_set}.csv")
+        
+        df_shapes, df_pairs = proceed_scoring(val_paths, configs, model_config_finetune, model_config_fromscratch, model_type, data_path, finetune_path, fromscratch_path, score_save_path)
+        
+        if viz_colshape:
+            visualize_colshape(model_type, split_set, df_shapes, save_path)
+            
+        if viz_colpair:
+            visualize_colpair(model_type, split_set, df_pairs, save_path)
+            
+    if test_paths is not None:
+        print('Process validation set')
+        split_set = 'test'
+        
+        score_save_path = os.path.join(save_path, f"score_{split_set}.csv")
+        
+        df_shapes, df_pairs = proceed_scoring(test_paths, configs, model_config_finetune, model_config_fromscratch, model_type, data_path, finetune_path, fromscratch_path, score_save_path)
+        
+        if viz_colshape:
+            visualize_colshape(model_type, split_set, df_shapes, save_path)
+            
+        if viz_colpair:
+            visualize_colpair(model_type, split_set, df_pairs, save_path)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

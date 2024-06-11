@@ -1,6 +1,7 @@
 import yaml
 import json
-from tabularfm.ctgan.processing import get_max_input_dim, get_max_n_categories
+import numpy as np
+from utils.processing import get_max_input_dim, get_max_n_categories, split_data
 
 from ctgan.synthesizers.tvaev2 import CustomTVAE as STVAE
 from ctgan.synthesizers.tvaev3 import CustomTVAE as STVAEM
@@ -8,35 +9,44 @@ from ctgan.synthesizers.tvae import CustomTVAE as OriTVAE
 from ctgan.synthesizers.ctgan import CustomCTGAN as OriCTGAN
 from be_great.great import CustomGReaT as OriGReaT
 
-def get_pretrain_paths(configs):
-    split_path = configs['split_path']
+def _get_split_ratio(data_path, configs):
     
-    if split_path is None:
-        # TODO
-        pass
+    split_ratio = configs['split_ratio']
+    assert split_ratio is not None
+    assert np.sum(split_ratio) == 1.0
     
-    else:
-        split_info = json.load(open(split_path, 'r'))
-        list_data_paths = split_info['pretrain_paths']
-        
+    if len(split_ratio) == 2:
+        return split_ratio[0], None
+    elif len(split_ratio) == 3:
+        return split_ratio[0], split_ratio[1]
+
+    
+def get_pretrain_paths(data_path, configs):
+    
+    if configs['split_path'] is None:
+        pretrain_size, val_size = _get_split_ratio(data_path, configs)
+        list_data_paths, _, _ = split_data(data_path, pretrain_size, val_size, random_state=configs['split_random_state'])
         return list_data_paths
     
-def get_finetune_paths(configs):
-    split_path = configs['split_path']
+    else:      
+        split_path = configs['split_path']
+        split_info = json.load(open(split_path, 'r'))
+        list_data_paths = split_info['pretrain_paths']
+        return list_data_paths
     
-    if split_path is None:
-        # TODO
-        pass
+def get_finetune_paths(data_path, configs):
+    
+    if configs['split_path'] is None:
+        pretrain_size, val_size = _get_split_ratio(data_path, configs)
+        _, val_paths, test_paths = split_data(data_path, pretrain_size, val_size, random_state=configs['split_random_state'])
     
     else:
+        split_path = configs['split_path']
         split_info = json.load(open(split_path, 'r'))
+        val_paths, test_paths = split_info['val_paths'], split_info['test_paths']
         
-        if configs['split_set'] in ['val', 'valdation', 'eval']:
-            return split_info['val_paths']
-        
-        elif configs['split_set'] in ['test', 'testing']:
-            return split_info['test_paths']
-
+    return val_paths, test_paths
+    
 def get_config(config_path):
     return yaml.safe_load(open(config_path))
 

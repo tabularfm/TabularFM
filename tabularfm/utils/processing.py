@@ -31,6 +31,18 @@ def get_colname_df(path):
     df = get_df(path)
     return df.columns.to_list()
 
+def split_data(path, pretrain_size, val_size=None, random_state=121):
+    all_paths = os.listdir(path)
+    all_paths = [k for k in all_paths if os.path.isdir(os.path.join(path, k))]
+    
+    pretrain_paths, target_paths = train_test_split(all_paths, train_size=pretrain_size, random_state=random_state)
+    
+    if val_size is not None:
+        val_paths, test_paths = train_test_split(target_paths, train_size=val_size, random_state=random_state)
+        return pretrain_paths, val_paths, test_paths
+    
+    return pretrain_paths, target_paths, None
+
 def dump_transformer(path):
     metadata = json.load(open(path + '/metadata.json'))
 

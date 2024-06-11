@@ -1,5 +1,6 @@
 import os
-from tabularfm.ctgan.processing import get_df, get_transformer_v3, get_metadata, load_model_weights, filter_metdata, scoring, add_score_df, get_colname_df, load_tensor_data_v3, add_padding, merge_column_shapes, merge_column_pairs
+from utils.processing import get_df, get_transformer_v3, get_metadata, load_model_weights, filter_metdata, scoring, add_score_df, get_colname_df, load_tensor_data_v3, add_padding
+from utils.viz import merge_column_shapes, merge_column_pairs
 from ctgan.data_transformer import ColnameTransformer
 from sklearn.model_selection import train_test_split
 from utils.cli import create_model
