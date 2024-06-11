@@ -1,7 +1,7 @@
 import os
 import shutil
 import argparse
-from utils import get_config, create_model_config, create_model, get_pretrain_paths
+from utils.cli import get_config, create_model_config, create_model, get_pretrain_paths
 from pipelines.pretraining import proceed_pretrain
 
 def pretrain_model(model_type, data_path, save_path, config_path, resume):

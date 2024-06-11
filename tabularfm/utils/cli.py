@@ -1,6 +1,6 @@
 import yaml
 import json
-from ctgan.utils import get_max_input_dim, get_max_n_categories
+from tabularfm.ctgan.processing import get_max_input_dim, get_max_n_categories
 
 from ctgan.synthesizers.tvaev2 import CustomTVAE as STVAE
 from ctgan.synthesizers.tvaev3 import CustomTVAE as STVAEM

@@ -1,9 +1,9 @@
 import os
 import argparse
 import shutil
-from utils import get_config, create_model_config, create_model, get_finetune_paths
+from utils.cli import get_config, create_model_config, create_model, get_finetune_paths
+from utils.viz import visualize_colshape, visualize_colpair
 from pipelines.evaluation import proceed_scoring
-from ctgan.utils import visualize_colshape, visualize_colpair
 
 def evaluate(model_type, data_path, finetune_path, fromscratch_path, save_path, config_path, resume, viz_colshape, viz_colpair):
     

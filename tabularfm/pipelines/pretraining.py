@@ -1,7 +1,7 @@
 import os
 import gc
 import random
-from ctgan.utils import load_tensor_data_v3, get_transformer_v3, add_padding, merge_training_hist, get_training_hist, save_latest_training_info, save_training_history, save_model_weights, get_df, get_colname_df
+from tabularfm.utils.processing import load_tensor_data_v3, get_transformer_v3, add_padding, merge_training_hist, get_training_hist, save_latest_training_info, save_training_history, save_model_weights, get_df, get_colname_df
 from transformers import TrainingArguments
 from sklearn.model_selection import train_test_split
 from be_great.great_dataset import GReaTDataset

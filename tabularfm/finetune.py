@@ -1,7 +1,7 @@
 import os
 import argparse
 import shutil
-from utils import get_config, create_model_config, create_model, get_finetune_paths
+from utils.cli import get_config, create_model_config, create_model, get_finetune_paths
 from pipelines.finetuning import proceed_finetune
 
 def finetune_model(model_type, data_path, save_path, config_path, pretrain_path, resume):

@@ -1,7 +1,7 @@
 import os
 import argparse
 import shutil
-from utils import get_config, create_model_config, create_model, get_finetune_paths
+from utils.cli import get_config, create_model_config, create_model, get_finetune_paths
 from pipelines.trainingfromscratch import proceed_train_from_scratch
 
 def train_from_scratch_model(model_type, data_path, save_path, config_path, resume):

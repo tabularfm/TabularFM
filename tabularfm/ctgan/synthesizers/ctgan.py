@@ -13,7 +13,7 @@ from tqdm import tqdm
 from ctgan.data_sampler import DataSampler
 from ctgan.data_transformer import DataTransformer
 from ctgan.synthesizers.base import BaseSynthesizer, random_state
-import ctgan.utils as utils
+import tabularfm.ctgan.processing as processing
 
 
 class Discriminator(Module):
@@ -817,7 +817,7 @@ class CustomCTGAN(BaseSynthesizer):
                             train_data, self._batch_size, col[perm], opt[perm])
                         c2 = c1[perm]
 
-                    fakez = utils.torch_padding(fakez, self.input_generator_dim)
+                    fakez = processing.torch_padding(fakez, self.input_generator_dim)
                     fake = self._generator(fakez)
                     fakeact = self._apply_activate(fake)
 
@@ -830,8 +830,8 @@ class CustomCTGAN(BaseSynthesizer):
                         real_cat = real
                         fake_cat = fakeact
 
-                    fake_cat = utils.torch_padding(fake_cat, self.input_discriminator_dim*self.pac)
-                    real_cat = utils.torch_padding(real_cat, self.input_discriminator_dim*self.pac)
+                    fake_cat = processing.torch_padding(fake_cat, self.input_discriminator_dim*self.pac)
+                    real_cat = processing.torch_padding(real_cat, self.input_discriminator_dim*self.pac)
                     
                     y_fake = self._discriminator(fake_cat)
                     y_real = self._discriminator(real_cat)
@@ -858,7 +858,7 @@ class CustomCTGAN(BaseSynthesizer):
                     m1 = torch.from_numpy(m1).to(self._device)
                     fakez = torch.cat([fakez, c1], dim=1)
 
-                fakez = utils.torch_padding(fakez, self.input_generator_dim)
+                fakez = processing.torch_padding(fakez, self.input_generator_dim)
                 fake = self._generator(fakez)
                 fakeact = self._apply_activate(fake)
 
@@ -868,7 +868,7 @@ class CustomCTGAN(BaseSynthesizer):
                 # else:
                 #     y_fake = self._discriminator(fakeact)
                     
-                fakeact = utils.torch_padding(fakeact, self.input_discriminator_dim*self.pac)
+                fakeact = processing.torch_padding(fakeact, self.input_discriminator_dim*self.pac)
                 y_fake = self._discriminator(fakeact)
 
                 if condvec is None:
@@ -928,7 +928,7 @@ class CustomCTGAN(BaseSynthesizer):
                             train_data, self._batch_size, col[perm], opt[perm])
                         c2 = c1[perm]
 
-                    fakez = utils.torch_padding(fakez, self.input_generator_dim)
+                    fakez = processing.torch_padding(fakez, self.input_generator_dim)
                     
                     with torch.no_grad():
                         fake = self._generator(fakez)
@@ -943,8 +943,8 @@ class CustomCTGAN(BaseSynthesizer):
                         real_cat = real
                         fake_cat = fakeact
 
-                    fake_cat = utils.torch_padding(fake_cat, self.input_discriminator_dim*self.pac)
-                    real_cat = utils.torch_padding(real_cat, self.input_discriminator_dim*self.pac)
+                    fake_cat = processing.torch_padding(fake_cat, self.input_discriminator_dim*self.pac)
+                    real_cat = processing.torch_padding(real_cat, self.input_discriminator_dim*self.pac)
                     
                     with torch.no_grad():
                         y_fake = self._discriminator(fake_cat)
@@ -964,7 +964,7 @@ class CustomCTGAN(BaseSynthesizer):
                     m1 = torch.from_numpy(m1).to(self._device)
                     fakez = torch.cat([fakez, c1], dim=1)
 
-                fakez = utils.torch_padding(fakez, self.input_generator_dim)
+                fakez = processing.torch_padding(fakez, self.input_generator_dim)
                 
                 with torch.no_grad():
                     fake = self._generator(fakez)
@@ -976,7 +976,7 @@ class CustomCTGAN(BaseSynthesizer):
                     # else:
                     #     y_fake = self._discriminator(fakeact)
                 
-                fakeact = utils.torch_padding(fakeact, self.input_discriminator_dim * self.pac)
+                fakeact = processing.torch_padding(fakeact, self.input_discriminator_dim * self.pac)
                 y_fake = self._discriminator(fakeact)
 
                 if condvec is None:
@@ -1114,7 +1114,7 @@ class CustomCTGAN(BaseSynthesizer):
                 c1 = torch.from_numpy(c1).to(self._device)
                 fakez = torch.cat([fakez, c1], dim=1)
 
-            fakez = utils.torch_padding(fakez, self.input_generator_dim)
+            fakez = processing.torch_padding(fakez, self.input_generator_dim)
             fake = self._generator(fakez)
             fakeact = self._apply_activate(fake)
             data.append(fakeact.detach().cpu().numpy())
