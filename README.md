@@ -39,7 +39,7 @@ We have cleaned, processed and released two comprehensive datasets: [Kaggle](htt
 `mkdir datasets/kaggle`  *Kaggle datasets*  
 `mkdir datasets/gittables` *Gittables datasets*
 
-* Download the correspindg datasets  
+* Download the corresponding datasets  
 
 *If you want to use other datasets, you should clean, transform and generate metadata to be compatible with our framework.*
 
