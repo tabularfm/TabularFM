@@ -55,7 +55,7 @@ We provide an end-to-end CLI to run experiments
 `python -m tabularfm -mt <model_type> -d <path to datasets directory> -s <path to result directory> -c <path to config file>`  
 
 * **-mt**: model type, we currently support `ctgan`, `tvae`, `stvae`, `stvaem`, `great`
-* **-d**: path to the directory datasets, note that this directory store sub-directories of corresponding datasets. The datasets should be priorly processed and transformed. We have already provided the processed datasets of Kaggle and Gittables. (see below sections)
+* **-d**: path to the directory datasets, note that this directory store sub-directories of corresponding datasets. The datasets should be priorly processed and transformed. We have already provided the processed datasets of Kaggle and Gittables.
 * **-s**: path to store the result of the experiment. This directory will consitsts of sub-directories corresponding to `pretrain`, `finetune`, `fromscratch`, `evaluation`
 * **-c**: path to configuration file (`yaml` format) of corresponding model type (-mt). This file consists of configuration to run the whole process of the experiment. We provided sample configurations for supported methods in `configs/`
 
@@ -100,6 +100,36 @@ fromscratch_cfg:
   lr: 1.e-4
   optimizers: 'adam'
   early_stopping: True # early stop in fine-tuning and single-training
+```
+
+### CLI all configuration
+
+```bash
+usage: __main__.py [-h] [--pretrain | --no-pretrain] [--finetune | --no-finetune] [--fromscratch | --no-fromscratch] [--evaluate | --no-evaluate] [-mt MODEL]
+                   [-d DATA_PATH] [-s SAVE_PATH] [-c CONFIG] [--resume | --no-resume]
+
+TabularFM Command Line Interface
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --pretrain, --no-pretrain
+                        Run pretraining
+  --finetune, --no-finetune
+                        Run finetuning
+  --fromscratch, --no-fromscratch
+                        Run training from scratch
+  --evaluate, --no-evaluate
+                        Run evaluation
+  -mt MODEL, --model MODEL
+                        Path to the training data
+  -d DATA_PATH, --data DATA_PATH
+                        Path to the directory of datasets
+  -s SAVE_PATH, --save SAVE_PATH
+                        Save directory
+  -c CONFIG, --config CONFIG
+                        Path to the configuration file
+  --resume, --no-resume
+                        Whether to resume training or not
 ```
 
 ## Modules
