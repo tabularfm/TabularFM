@@ -102,7 +102,7 @@ fromscratch_cfg:
   early_stopping: True # early stop in fine-tuning and single-training
 ```
 
-### CLI all configuration
+### All configuration
 
 ```bash
 usage: __main__.py [-h] [--pretrain | --no-pretrain] [--finetune | --no-finetune] [--fromscratch | --no-fromscratch] [--evaluate | --no-evaluate] [-mt MODEL]
