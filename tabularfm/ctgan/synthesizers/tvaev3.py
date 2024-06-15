@@ -6,14 +6,14 @@ import torch
 from torch.nn import Linear, Module, Parameter, ReLU, Sequential
 from torch.nn.functional import cross_entropy, mse_loss
 from torch.optim import Adam
-from ctgan.data_loader import CustomTensorDataset, CustomTensorDatasetV2
+from ..data_loader import CustomTensorDataset, CustomTensorDatasetV2
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from ctgan.data_transformer import DataTransformer
-from ctgan.synthesizers.base import BaseSynthesizer, random_state
+from ..data_transformer import DataTransformer
+from .base import BaseSynthesizer, random_state
 
-from ctgan.callbacks import EarlyStopping
+from ..callbacks import EarlyStopping
 
 
 class Encoder(Module):

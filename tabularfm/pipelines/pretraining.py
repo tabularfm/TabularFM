@@ -4,8 +4,8 @@ import random
 from tabularfm.utils.processing import load_tensor_data_v3, get_transformer_v3, add_padding, merge_training_hist, get_training_hist, save_latest_training_info, save_training_history, save_model_weights, get_df, get_colname_df
 from transformers import TrainingArguments
 from sklearn.model_selection import train_test_split
-from be_great.great_dataset import GReaTDataset
-from ctgan.data_transformer import ColnameTransformer
+from tabularfm.be_great.great_dataset import GReaTDataset
+from tabularfm.ctgan.data_transformer import ColnameTransformer
 
 def proceed_pretrain(list_data_paths, configs, model_config, model, model_type, data_path, save_path):
     if model_type in ['ctgan', 'tvae', 'stvae', 'stvaem']:
@@ -34,7 +34,6 @@ def _proceed_pretrain_based_ctgan_tvae(list_data_paths, configs, model_config, m
         print(f'EPOCH {epoch}')
         
         random.shuffle(list_data_paths)
-        print(f'Epoch {epoch} with shuffled datasets {list_data_paths}')
         
         for i, path in enumerate(list_data_paths):
             

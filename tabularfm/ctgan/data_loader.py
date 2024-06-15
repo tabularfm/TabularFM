@@ -1,7 +1,7 @@
 import torch
 from torch import Tensor
 from torch.utils.data import TensorDataset, Dataset
-from ctgan.data_transformer import DataTransformer, ColnameTransformer
+from tabularfm.ctgan.data_transformer import DataTransformer, ColnameTransformer
 import torch.nn.functional as F
 
 import pandas as pd

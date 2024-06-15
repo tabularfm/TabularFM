@@ -1,7 +1,8 @@
 # from ctgan.synthesizers.ctgan import CustomCTGAN
 # from ctgan.synthesizers.tvae import CustomTVAE
 from __future__ import annotations
-from ctgan.data_transformer import DataTransformer
+# from ctgan.data_transformer import DataTransformer, DataTransformerV2
+# from tabularfm.ctgan.data_transformer import DataTransformer, DataTransformerV2
 import pandas as pd
 import csv
 import pickle
@@ -12,7 +13,6 @@ import torch.nn.functional as F
 from sklearn.model_selection import train_test_split
 import numpy as np
 from sdmetrics.reports.single_table import QualityReport
-from ctgan.data_transformer import DataTransformerV2
 
 
 def get_df(path, strict_mode=True) -> pd.DataFrame:
@@ -95,8 +95,12 @@ def get_transformer(path) -> DataTransformer:
 def get_transformer_v2(path) -> DataTransformer:
     return pickle.load(open(path + '/transformer_v2.pkl', 'rb'))
 
-def get_transformer_v3(path) -> DataTransformerV2:
-    return pickle.load(open(path + '/transformer_v3.pkl', 'rb'))
+def get_transformer_v3(path, test_size=0.3, random_state=121) -> DataTransformerV2:
+    try:
+        transformer = pickle.load(open(path + '/transformer_v3.pkl', 'rb'))
+    except:
+        transformer = transform_data_v3(path, test_size, 121)
+    return transformer
 
 
 def get_metadata(path) -> dict:
@@ -163,6 +167,22 @@ def load_tensor_data_v2(path, test_size=0.3, transform_func:callable=None, init_
     
     return train_data, val_data
 
+def transform_data_v3(path, test_size, random_state):
+    df = get_df(path)
+    data = df
+    
+    train_data, val_data = train_test_split(data, test_size=test_size, random_state=random_state)
+    
+    transformer = DataTransformerV2()
+    metadata = get_metadata(path)
+    discrete_cols = [k for k,v in metadata['columns'].items() if v['sdtype'] != 'numerical']
+    
+    # fit only with train_data except one hot encoding should be fit on the whole data to prevent missing categories
+    transformer.fit_wo_leakage(data, train_data.index, discrete_columns=discrete_cols)
+    pickle.dump(transformer, open(path + '/transformer_v3.pkl', 'wb'))
+    
+    return transformer
+
 def load_tensor_data_v3(path, test_size=0.3, transform_func:callable=None, init_transformer=False, **kwargs):
     # load origina data
     df = get_df(path)
@@ -179,15 +199,16 @@ def load_tensor_data_v3(path, test_size=0.3, transform_func:callable=None, init_
     
     # transform
     if init_transformer or not os.path.exists(transformer_path):
-        transformer = DataTransformerV2()
-        metadata = get_metadata(path)
-        discrete_cols = [k for k,v in metadata['columns'].items() if v['sdtype'] != 'numerical']
+        transformer = transform_data_v3(path, test_size, 121)
+        # transformer = DataTransformerV2()
+        # metadata = get_metadata(path)
+        # discrete_cols = [k for k,v in metadata['columns'].items() if v['sdtype'] != 'numerical']
         
-        # fit only with train_data except one hot encoding should be fit on the whole data to prevent missing categories
-        transformer.fit_wo_leakage(data, train_data.index, discrete_columns=discrete_cols)
-        pickle.dump(transformer, open(path + '/transformer_v3.pkl', 'wb'))
+        # # fit only with train_data except one hot encoding should be fit on the whole data to prevent missing categories
+        # transformer.fit_wo_leakage(data, train_data.index, discrete_columns=discrete_cols)
+        # pickle.dump(transformer, open(path + '/transformer_v3.pkl', 'wb'))
     else:
-        transformer = get_transformer_v3(path)
+        transformer = get_transformer_v3(path, test_size, 121)
     
     train_data = transformer.transform(train_data)
     if test_size is not None:
@@ -211,14 +232,14 @@ def get_training_hist(model_type, obj) -> pd.DataFrame:
         return pd.DataFrame(obj.state.log_history)
 
 # utils for training
-def get_max_input_dim(data_path, colname_dim=None):
+def get_max_input_dim(data_path, colname_dim=None, test_size=0.3, random_state=121):
     paths = os.listdir(data_path)
     paths = [os.path.join(data_path, p) for p in paths]
     
     if colname_dim is None:
-        return np.max([get_transformer_v3(path).output_dimensions for path in paths])
+        return np.max([get_transformer_v3(path, test_size, random_state).output_dimensions for path in paths])
     
-    return np.max([get_transformer_v3(path).output_dimensions + (colname_dim * len(get_transformer_v3(path)._column_transform_info_list)) for path in paths])
+    return np.max([get_transformer_v3(path, test_size, random_state).output_dimensions + (colname_dim * len(get_transformer_v3(path, test_size, random_state)._column_transform_info_list)) for path in paths])
 
 def get_max_n_categories(data_path):
     

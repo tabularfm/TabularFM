@@ -51,11 +51,14 @@ def visualize_colshape(model_type, split_set, df_shapes, save_path):
     rs_dict_st = {col_names[i]: freqs_st[i] for i in range(len(col_names))}
 
     # FT > ST
-    wordcloud_best = WordCloud(max_font_size=50, max_words=len(rs_dict_ft), background_color="white",
-                        width=1280, height=800).generate_from_frequencies(rs_dict_ft)
+    # wordcloud_best = WordCloud(max_font_size=50, max_words=len(rs_dict_ft), background_color="white",
+    #                     width=1280, height=800).generate_from_frequencies(rs_dict_ft)
+
+    print('DEBUG len(rs_dict_ft): ', len(rs_dict_ft))
+    wordcloud_best = WordCloud(max_words=len(rs_dict_ft), background_color="white").generate_from_frequencies(rs_dict_ft)
 
     # plt.figure(figsize=(8, 6))
-
+    plt.clf()
     fig = plt.gcf()
     plt.imshow(wordcloud_best, interpolation="bilinear")
     plt.axis("off")
@@ -65,19 +68,16 @@ def visualize_colshape(model_type, split_set, df_shapes, save_path):
 
     # ST > FT
     wordcloud_worse = WordCloud(max_font_size=50, max_words=len(rs_dict_st), background_color="white",
-                            colormap='Oranges',
-                        width=1280, height=800).generate_from_frequencies(rs_dict_st)
+                            colormap='Oranges').generate_from_frequencies(rs_dict_st)
 
     # plt.figure(figsize=(8, 6))
-
+    plt.clf()
     fig = plt.gcf()
     plt.imshow(wordcloud_worse, interpolation="bilinear")
     plt.axis("off")
     # plt.show()
 
     fig.savefig(os.path.join(save_path, f'wc_{model_type}_{split_set}_worst.png'), dpi=1000)
-    
-    
     
 def merge_column_pairs(ft_report, st_report, ds_name):
     df_pairs_ft = ft_report.get_details(property_name="Column Pair Trends").copy()
@@ -127,7 +127,8 @@ def visualize_colpair(model_type, split_set, df_pairs, save_path, top_k=30):
     data_best_pairs = df_pairs.sort_values(by='ft_st', ascending=False)[['Column 1', 'Column 2', 'ft_st']].iloc[:top_k].to_numpy()
     fromto_table_df = pd.DataFrame(data_best_pairs, columns=["from", "to", "value"])
     matrix_best_pairs = Matrix.parse_fromto_table(fromto_table_df)
- 
+    
+    plt.clf()
     circos_best = Circos.initialize_from_matrix(
         matrix_best_pairs,
         space=3,
@@ -145,6 +146,7 @@ def visualize_colpair(model_type, split_set, df_pairs, save_path, top_k=30):
     fromto_table_df = pd.DataFrame(data_worst_pairs, columns=["from", "to", "value"])
     matrix_worst_pairs = Matrix.parse_fromto_table(fromto_table_df)
  
+    plt.clf()
     circos_worst = Circos.initialize_from_matrix(
         matrix_worst_pairs,
         space=3,

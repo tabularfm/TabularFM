@@ -1,11 +1,11 @@
 import os
 import gc
-from tabularfm.utils.processing import load_tensor_data_v3, get_transformer_v3, merge_training_hist, get_training_hist, save_latest_training_info, save_training_history, save_model_weights, get_df, get_colname_df
-from utils.cli import create_model
+from ..utils.processing import load_tensor_data_v3, get_transformer_v3, merge_training_hist, get_training_hist, save_latest_training_info, save_training_history, save_model_weights, get_df, get_colname_df
+from ..utils.cli import create_model
 from transformers import TrainingArguments
 from sklearn.model_selection import train_test_split
-from be_great.great_dataset import GReaTDataset
-from ctgan.data_transformer import ColnameTransformer
+from ..be_great.great_dataset import GReaTDataset
+from ..ctgan.data_transformer import ColnameTransformer
 
 def proceed_train_from_scratch(list_data_paths, configs, model_config, model_type, data_path, save_path):
     if model_type in ['ctgan', 'tvae', 'stvae', 'stvaem']:
@@ -30,6 +30,7 @@ def _proceed_train_from_scratch_based_ctgan_tvae(list_data_paths, configs, model
         colname_transformer = ColnameTransformer(pretrained_model=PRETRAINED_LLM)
         OPTIMIZE_COLUMN_NAME = configs['fromscratch_cfg']['optimize_signature']
     
+    print(f'Total datasets {len(list_data_paths)}')
     for i, path in enumerate(list_data_paths):
         
         print(f'\t{path}')

@@ -1,13 +1,13 @@
 import yaml
 import json
 import numpy as np
-from utils.processing import get_max_input_dim, get_max_n_categories, split_data
+from tabularfm.utils.processing import get_max_input_dim, get_max_n_categories, split_data
 
-from ctgan.synthesizers.tvaev2 import CustomTVAE as STVAE
-from ctgan.synthesizers.tvaev3 import CustomTVAE as STVAEM
-from ctgan.synthesizers.tvae import CustomTVAE as OriTVAE
-from ctgan.synthesizers.ctgan import CustomCTGAN as OriCTGAN
-from be_great.great import CustomGReaT as OriGReaT
+from tabularfm.ctgan.synthesizers.tvaev2 import CustomTVAE as STVAE
+from tabularfm.ctgan.synthesizers.tvaev3 import CustomTVAE as STVAEM
+from tabularfm.ctgan.synthesizers.tvae import CustomTVAE as OriTVAE
+from tabularfm.ctgan.synthesizers.ctgan import CustomCTGAN as OriCTGAN
+from tabularfm.be_great.great import CustomGReaT as OriGReaT
 
 def _get_split_ratio(data_path, configs):
     

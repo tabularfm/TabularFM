@@ -4,16 +4,16 @@ import warnings
 
 import numpy as np
 import pandas as pd
-from ctgan.callbacks import EarlyStopping
+from tabularfm.ctgan.callbacks import EarlyStopping
 import torch
 from torch import optim
 from torch.nn import BatchNorm1d, Dropout, LeakyReLU, Linear, Module, ReLU, Sequential, functional
 from tqdm import tqdm
 
-from ctgan.data_sampler import DataSampler
-from ctgan.data_transformer import DataTransformer
-from ctgan.synthesizers.base import BaseSynthesizer, random_state
-import utils.processing as processing
+from tabularfm.ctgan.data_sampler import DataSampler
+from tabularfm.ctgan.data_transformer import DataTransformer
+from tabularfm.ctgan.synthesizers.base import BaseSynthesizer, random_state
+import tabularfm.utils.processing as processing
 
 
 class Discriminator(Module):
