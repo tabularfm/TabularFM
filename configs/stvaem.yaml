@@ -1,4 +1,4 @@
-split_path: 'toy_split_3sets.json' # None
+split_path: 'toy_kaggle_split_3sets.json' # None
 split_set:
 split_random_state: 121 # if split_path is None, split data following this random state
 verbose: True

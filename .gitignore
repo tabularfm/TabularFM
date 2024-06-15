@@ -132,7 +132,5 @@ tox.ini
 
 archive/
 mlruns/
-*_pt/
-*_st/
-*_ft/
-*_scores/
+rs*/
+tbr/
