@@ -57,7 +57,7 @@ We provide an end-to-end CLI to run experiments
 * **-mt**: model type, we currently support `ctgan`, `tvae`, `stvae`, `stvaem`, `great`
 * **-d**: path to the directory datasets, note that this directory store sub-directories of corresponding datasets. The datasets should be priorly processed and transformed. We have already provided the processed datasets of Kaggle and Gittables. (see below sections)
 * **-s**: path to store the result of the experiment. This directory will consitsts of sub-directories corresponding to `pretrain`, `finetune`, `fromscratch`, `evaluation`
-* **-c**: path to configuration file (`yaml` format) of corresponding model type (-mt). This file consists of configuration to run the whole process of the experiment.
+* **-c**: path to configuration file (`yaml` format) of corresponding model type (-mt). This file consists of configuration to run the whole process of the experiment. We provided sample configurations for supported methods in `configs/`
 
 If you want to run specific training process(es), use the following additonal flags:
 * **--pretrain**: pretraining
