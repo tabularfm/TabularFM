@@ -32,7 +32,7 @@ pip install -r requirements.txt
 ```
 
 ## Download the datasets
-We have cleaned, processed and released two comprehensive datasets: [Kaggle](https://drive.google.com/drive/folders/1HnRTMBbX9kTUiDZ4pjNSWaM5SJLUSULx?usp=drive_link) and [Gittables]((https://drive.google.com/file/d/10jBLjilKI5MJ_qXyDKxJFfN9ez9y9ydv/view?usp=drive_link))
+We have cleaned, processed and released two comprehensive datasets: [Kaggle](https://drive.google.com/drive/folders/1HnRTMBbX9kTUiDZ4pjNSWaM5SJLUSULx?usp=drive_link) and [Gittables](https://drive.google.com/file/d/10jBLjilKI5MJ_qXyDKxJFfN9ez9y9ydv/view?usp=drive_link)
 
 * Create directory to store the datasets  
 `mkdir datasets`  
