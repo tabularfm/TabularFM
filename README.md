@@ -49,7 +49,7 @@ We have cleaned, processed and released two comprehensive datasets: [Kaggle](htt
 
 *So far, we support learning methods: CTGAN, TVAE, STVAE, STVAEM, GReaT*
 
-## Command-line interfrace
+## Command-line
 We provide an end-to-end CLI to run experiments  
 
 `python -m tabularfm -mt <model_type> -d <path to datasets directory> -s <path to result directory> -c <path to config file>`  
