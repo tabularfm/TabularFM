@@ -15,12 +15,14 @@
 * LEVEL 2
     * Avoid tables with long texts in column names or values (e.g. FUL_1.csv)
     * Avoid tables with large NA column values
-    * Split special characters away from numbers
-    * *(Avoid tables with meaningless column names (e.g. BooldyMary))*
+    * [Not-applicable] Split special characters away from numbers 
+    * [Not-applicable] *(Avoid tables with meaningless column names (e.g. BooldyMary))*
 * LEVEL 3
     * Find prefixes and set group for datasets with the same prefixes
+        * Group datasets having same prefixes
+        * Group single datasets
 
 * MERGE
-    * Merge datasets within a same group
+    * Merge datasets within a same group into a single csv file
 
 * Then apply processing script in the repo to further shortlist the datasets
