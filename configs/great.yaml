@@ -6,7 +6,7 @@ model_cfg:
   pretrained_llm: 'distilgpt2'
   pretrained_tokenizer: 'distilgpt2'
   token_max_length: 512
-  init_from_scratch: False
+  init_from_scratch: True
 pretrain_cfg:
   epochs: 2
   batch_size: 32
