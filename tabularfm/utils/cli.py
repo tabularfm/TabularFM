@@ -165,6 +165,7 @@ def _create_model_cfg_based_great(data_path, configs, config_type):
             "epochs": 1,
             "batch_size": configs['pretrain_cfg']['batch_size'],
             "model_max_length": configs['model_cfg']['token_max_length'],
+            "init_from_scratch": configs['model_cfg']['init_from_scratch'],
             "verbose": configs['verbose']
         }
         
