@@ -10,7 +10,7 @@ import pandas as pd
 from tqdm import tqdm
 
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, EarlyStoppingCallback
+from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments, EarlyStoppingCallback, AutoConfig
 
 from sklearn.model_selection import train_test_split
 
@@ -574,6 +574,7 @@ class CustomGReaT:
         epochs: int = 100,
         batch_size: int = 8,
         model_max_length: int = 512,
+        init_from_scratch: bool =False,
         **train_kwargs,
     ):
         """Initializes GReaT.
@@ -596,7 +597,11 @@ class CustomGReaT:
         self.tokenizer.model_max_length = model_max_length
         self.tokenizer.pad_token = self.tokenizer.eos_token
         
-        self.model = AutoModelForCausalLM.from_pretrained(self.pretrained_llm)
+        if init_from_scratch:
+            model_config = AutoConfig.from_pretrained(self.pretrained_llm)
+            self.model = AutoModelForCausalLM.from_config(model_config)
+        else:
+            self.model = AutoModelForCausalLM.from_pretrained(self.pretrained_llm)
         
         # Set the training hyperparameters
         self.experiment_dir = experiment_dir
