@@ -404,8 +404,8 @@ def load_model_weights_based_tvae(model: CustomTVAE, path: str, suffix=None) -> 
     
     else:
         if suffix is None:
-            model.encoder.load_state_dict(torch.load(os.path.join(path, 'encoder_weights.pt')))
-            model.decoder.load_state_dict(torch.load(os.path.join(path, 'decoder_weights.pt')))
+            model.encoder.load_state_dict(torch.load(os.path.join(path, 'encoder_weights.pt'), map_location=torch.device('cpu')))
+            model.decoder.load_state_dict(torch.load(os.path.join(path, 'decoder_weights.pt'), map_location=torch.device('cpu')))
         else:
             model.encoder.load_state_dict(torch.load(os.path.join(path, f'encoder_{suffix}.pt'), map_location=torch.device('cpu')))
             model.decoder.load_state_dict(torch.load(os.path.join(path, f'decoder_{suffix}.pt'), map_location=torch.device('cpu')))
@@ -415,13 +415,21 @@ def load_model_weights_based_tvae(model: CustomTVAE, path: str, suffix=None) -> 
 def load_model_weights_based_ctgan(model: CustomCTGAN, path: str, suffix=None) -> CustomCTGAN:
     import torch
     
-    if suffix is None:
-        model._generator.load_state_dict(torch.load(os.path.join(path, 'generator_weights.pt')))
-        model._discriminator.load_state_dict(torch.load(os.path.join(path, 'discriminator_weights.pt')))
+    if torch.cuda.is_available():
+        if suffix is None:
+            model._generator.load_state_dict(torch.load(os.path.join(path, 'generator_weights.pt')))
+            model._discriminator.load_state_dict(torch.load(os.path.join(path, 'discriminator_weights.pt')))
+        else:
+            model._generator.load_state_dict(torch.load(os.path.join(path, f'generator_{suffix}.pt')))
+            model._discriminator.load_state_dict(torch.load(os.path.join(path, f'discriminator_{suffix}.pt')))
+            
     else:
-        model._generator.load_state_dict(torch.load(os.path.join(path, f'generator_{suffix}.pt')))
-        model._discriminator.load_state_dict(torch.load(os.path.join(path, f'discriminator_{suffix}.pt')))
-    
+        if suffix is None:
+            model._generator.load_state_dict(torch.load(os.path.join(path, 'generator_weights.pt'), map_location=torch.device('cpu')))
+            model._discriminator.load_state_dict(torch.load(os.path.join(path, 'discriminator_weights.pt'), map_location=torch.device('cpu')))
+        else:
+            model._generator.load_state_dict(torch.load(os.path.join(path, f'generator_{suffix}.pt'), map_location=torch.device('cpu')))
+            model._discriminator.load_state_dict(torch.load(os.path.join(path, f'discriminator_{suffix}.pt'), map_location=torch.device('cpu')))
     return model
     
 
