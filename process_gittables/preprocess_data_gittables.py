@@ -1,7 +1,7 @@
 import os
 import shutil
 import pandas as pd
-from preprocess.preprocessing import preprocess_clean_gittables
+from tabularfm.preprocess.preprocessing import preprocess_clean_gittables
 
 ############# CONFIG #############
 
@@ -14,6 +14,7 @@ PREPROCESS_CONFIG = {
     'min_freq_threshold': 0.08, # if max frequency of a values of a column >= this param, all values of the column will be kept
     'percentage_to_remove': 0.9, # if the categories is too sparse (a lot of categories but very small number of data per categoru) | if the number of categories in the column >= this param * number of data rows, it will be removed
     'percentage_to_remove_row': 0.5, # if nan values are too many (>= this param * n_rows), remove
+    'transform_stringified_numerical_columns': True, # transform stringified numerical columns to numerical columns to avoid high cardinality categorical classification.
     'generate_metadata': True,
 }
 

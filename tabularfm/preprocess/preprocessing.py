@@ -50,6 +50,7 @@ def preprocess_clean(src_data_dirs, dst_data_dirs, preprocessing_cfg, min_cols_t
                                                                                     min_freq_threshold=preprocessing_cfg['min_freq_threshold'], 
                                                                                     pct_to_remove=preprocessing_cfg['percentage_to_remove'],
                                                                                     pct_to_remove_row=preprocessing_cfg['percentage_to_remove_row'],
+                                                                                    transform_stringified_numerical_columns=preprocessing_cfg['transform_stringified_numerical_columns'],
                                                                                     return_info=True,
                                                                                     verbose=verbose)
             

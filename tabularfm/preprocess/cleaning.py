@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import re
 
 class TabCleaning():
     def __init__(self, exclude=[], remove=[]):
@@ -55,9 +56,87 @@ class TabCleaning():
             # the smallest category has number of samples under threshold
             if min(list(frequency.values())) < min_freq_threshold:
                 return True
-            
-            
+        
         return False
+
+    def convert_stringified_to_numeric(self, series):
+        '''
+        Converts common types of numeric strings such as money values, percentages, etc. to numeric values.
+        Suggested workflow: since this function will return NaN if a value is not valid,
+        we recommend dropping/imputing empty values AFTER this is done.
+        '''
+        def _get_num_from_string(s):
+            # we assume that the numerical values will only ever contain one '.'
+            # if not, we will return nothing
+            # O(n) string processing
+            num = ''
+            # only these will directly impact the downstream parsing
+            allowed_characters = {
+                '.': 0,
+                '-': 0,
+                'e': 0,
+            }
+            for i in range(len(s)):
+                if s[i] == '.':
+                    allowed_characters['.'] += 1
+                    # handle multiple invalid misinputs
+                    if allowed_characters['.'] > 1:
+                        return None
+                    num += s[i]
+                elif s[i] == '-' and i == 0:
+                    allowed_characters['-'] += 1
+                    # handle cases like phone numbers separated by '-'
+                    if allowed_characters['-'] > 1:
+                        return None
+                    num += s[i]
+                elif s[i] == 'E' or s[i] == 'e':
+                    allowed_characters['e'] += 1
+                    # handle cases like 'eeeeeeeeee'
+                    if allowed_characters['e'] > 1:
+                        return None
+                    num += s[i]
+                elif s[i].isdigit():
+                    num += s[i]
+            
+            if not num: return None
+            try: 
+                num = float(num)
+                return num
+            except Exception as e:
+                # add custom logging functions here
+                print('Error converting string to float:', e)
+                return None
+        
+        def _check_if_mostly_numeric(series):
+            # get 10 possible samples
+            samples = series.sample(10)
+            success = 0
+            pattern = r'^-?\d+(\.\d+)?([eE][-+]?\d+)?$'
+
+            for sample in samples: 
+                # remove all whitespaces, commas, and parentheses
+                sample = sample.strip().replace(',', '').replace(' ', '').replace('(', '').replace(')', '')
+                # matches negatives, decimals, and scientific notation
+                if re.match(pattern, sample):
+                    success += 1
+                elif sample.endswith('%'):
+                    sample = sample[:-1]
+                    if re.match(pattern, sample):
+                        success += 1
+                elif re.match(r'^[\$\£\€]', sample):
+                    sample = sample[1:]
+                    if re.match(pattern, sample):
+                        success += 1
+
+            # needs 70% success rate to continue
+            return success >= 7
+
+        method_applied_flag = False
+        if series.dtype == 'object' and _check_if_mostly_numeric(series):
+            method_applied_flag = True
+            series = series.apply(lambda x: pd.to_numeric(_get_num_from_string(x), errors='coerce'))
+
+        return series, method_applied_flag
     
     def is_nan(self, series):
         # print('\t Check is na: ')
@@ -95,7 +174,7 @@ class TabCleaning():
 
         return False
             
-    def clean(self, df, remove_timestamp=True, remove_low_frequency=True, remove_id=True, verbose=1, return_info=False, **kwargs):
+    def clean(self, df, remove_timestamp=True, remove_low_frequency=True, remove_id=True, verbose=1, return_info=False, transform_stringified_numerical_columns = True, **kwargs):
         """Clean data, consists of 
         - timestamp
         - low frequency (e.g. address, id, etc.)
@@ -105,7 +184,6 @@ class TabCleaning():
             else impute with mode (categorical), mean (numerical)
         - fill inf: the same as nan
         
-
         Args:
             df (_type_): _description_
             remove_timestamp (bool, optional): _description_. Defaults to True.
@@ -139,9 +217,14 @@ class TabCleaning():
                 continue
             
             series = df[col]
-            
+            stringified_column_transformed = False
+
+            if transform_stringified_numerical_columns:
+                series, stringified_column_transformed = self.convert_stringified_to_numeric(series)
+                cleaning_info[col] = {'keep': True, 'desc': 'STRINGIFIED_TO_NUMERIC'}
+
             # ID COLUMN
-            if self.is_id_column(series):
+            if self.is_id_column(series) and not stringified_column_transformed:
                 if verbose: print('\t del: id column')
                 del df[col]
                 cleaning_info[col] = {'keep': False, 'desc': 'ID'}
@@ -163,8 +246,9 @@ class TabCleaning():
                     del df[col]
                     cleaning_info[col] = {'keep': False, 'desc': 'LOW_FREQUENCY'}
                     continue
-                
+            
             # UPDATE SERIES
+            
             # FILL NA
             if self.is_nan(series):
                 # calculate percentage of nan
@@ -217,10 +301,12 @@ class TabCleaning():
             
             # -----------
             self.process_cols[col] = True #
-
+            if verbose: print('\t pass')
+            
+            if cleaning_info[col]:
+                continue
             cleaning_info[col] = {'keep': True, 'desc': 'NA'}
             
-            if verbose: print('\t pass')
         
         if not return_info:   
             return df
