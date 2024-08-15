@@ -18,10 +18,13 @@ def _parse_args():
     parser.add_argument('--evaluate', action=argparse.BooleanOptionalAction, dest="evaluate", help="Run evaluation")
     
     # config
-    parser.add_argument("-mt", "--model", type=str, default="stvae", dest="model", help="Path to the training data")
+    #  general
+    parser.add_argument("-mt", "--modeltype", type=str, default="stvae", dest="model_type", help="Path to the training data")
     parser.add_argument("-d", "--data", type=str, dest="data_path", help="Path to the directory of datasets")
     parser.add_argument("-s", "--save", type=str, dest="save_path", help="Save directory")
     parser.add_argument("-c", "--config", type=str, dest="config", help="Path to the configuration file")
+    #  finetune
+    parser.add_argument("-m", "--model", type=str, default=None, dest="model", help="Path to the pretrained model directory")
     
     # kwargs
     parser.add_argument('--resume', action=argparse.BooleanOptionalAction, dest="resume", help="Whether to resume training or not")
@@ -47,7 +50,8 @@ def main():
     fromscratch = args.fromscratch
     evaluate = args.evaluate
     
-    model_type = args.model
+    model_type = args.model_type
+    pretrain_path = args.model
     data_path = args.data_path
     save_path = args.save_path
     config_path = args.config

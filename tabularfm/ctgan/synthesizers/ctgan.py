@@ -445,7 +445,7 @@ class CTGAN(BaseSynthesizer):
                 )
 
     @random_state
-    def sample(self, n, condition_column=None, condition_value=None):
+    def sample(self, n, condition_column=None, condition_value=None, inverse=True):
         """Sample data similar to the training data.
 
         Choosing a condition_column and condition_value will increase the probability of the
@@ -497,7 +497,10 @@ class CTGAN(BaseSynthesizer):
         data = np.concatenate(data, axis=0)
         data = data[:n]
 
-        return self._transformer.inverse_transform(data)
+        if inverse:
+            return self._transformer.inverse_transform(data)
+        
+        return data
 
     def set_device(self, device):
         """Set the `device` to be used ('GPU' or 'CPU)."""
@@ -1064,7 +1067,7 @@ class CustomCTGAN(BaseSynthesizer):
             self._transformer = transformer
         
     @random_state
-    def sample(self, n, transformer, data_sampler_type='val', condition_column=None, condition_value=None):
+    def sample(self, n, transformer, data_sampler_type='val', condition_column=None, condition_value=None, inverse=True):
         """Sample data similar to the training data.
 
         Choosing a condition_column and condition_value will increase the probability of the
@@ -1122,7 +1125,10 @@ class CustomCTGAN(BaseSynthesizer):
         data = np.concatenate(data, axis=0)
         data = data[:n]
 
-        return transformer.inverse_transform(data)
+        if inverse:
+            return transformer.inverse_transform(data)
+
+        return data
 
     def set_device(self, device):
         """Set the `device` to be used ('GPU' or 'CPU)."""

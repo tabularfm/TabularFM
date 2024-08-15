@@ -1,8 +1,9 @@
-split_path: 'toy_kaggle_split_3sets.json' # None
+split_path: 'downstream_split.json' # None
 split_set:
 split_random_state: 121 # if split_path is None, split data following this random state
 verbose: True
 model_cfg:
+  input_dim: 2144 # if None, auto calculate from given datasets
   embedding_dim: 128
   encoder_dims: [512, 256, 256, 128]
   decoder_dims: [128, 256, 256, 512]

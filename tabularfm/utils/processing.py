@@ -3,6 +3,7 @@
 from __future__ import annotations
 # from ctgan.data_transformer import DataTransformer, DataTransformerV2
 # from tabularfm.ctgan.data_transformer import DataTransformer, DataTransformerV2
+from tabularfm.ctgan.data_transformer import DataTransformerV2
 import pandas as pd
 import csv
 import pickle
@@ -185,8 +186,12 @@ def transform_data_v3(path, test_size, random_state):
 
 def load_tensor_data_v3(path, test_size=0.3, transform_func:callable=None, init_transformer=False, **kwargs):
     # load origina data
+    
+    # if type(path) is str:
     df = get_df(path)
     data = df
+    # elif type(path) is pd.DataFrame:
+    #     data = path
     
     # split
     if test_size is not None:

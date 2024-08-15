@@ -58,6 +58,7 @@ We provide an end-to-end CLI to run experiments
 * **-d**: path to the directory datasets, note that this directory store sub-directories of corresponding datasets. The datasets should be priorly processed and transformed. We have already provided the processed datasets of Kaggle and Gittables.
 * **-s**: path to store the result of the experiment. This directory will consitsts of sub-directories corresponding to `pretrain`, `finetune`, `fromscratch`, `evaluation`
 * **-c**: path to configuration file (`yaml` format) of corresponding model type (-mt). This file consists of configuration to run the whole process of the experiment. We provided sample configurations for supported methods in `configs/`
+* **-m**: *(for finetuning, optional)*, directory to the pretrained model
 
 If you want to run specific training process(es), use the following additonal flags:
 * **--pretrain**: pretraining
@@ -67,18 +68,23 @@ If you want to run specific training process(es), use the following additonal fl
 
 ### Example
 
+#### Whole pipeline
 The following command-line will run the experiment of STVAE  
 
 `python -m tabularfm -mt "stvae" -d "datasets/kaggle/" -s "results_stvae" -c "stvae.yaml"`
 
+#### Fine-tuning
+`python -m tabularfm --finetune -mt "stvae" -d "datasets/kaggle/" -s "results_stvae_downstream" -c "configs/stvae.yaml" -m "models/stvae_gittables"`
+
 The configuration file `stvae.yaml` is
 
 ```yaml
-split_path: 'split_3sets.json' # if None, auto split the datasets
-split_set: # 'val', 'test', or leave empty to run both
+split_path: 'downstream_split.json' # None
+split_set:
 split_random_state: 121 # if split_path is None, split data following this random state
 verbose: True
 model_cfg:
+  input_dim: 2144 # if None, auto calculate from given datasets
   embedding_dim: 128
   encoder_dims: [512, 256, 256, 128]
   decoder_dims: [128, 256, 256, 512]

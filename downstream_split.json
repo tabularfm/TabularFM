@@ -1,0 +1,11 @@
+{
+    "pretrain_paths": null,
+    "val_paths": [
+        "-social-networking-ads",
+        "6-3-extracted",
+        "3wine-classification-dataset",
+        "3d-printer-material-dataset",
+        "3-diet-comparison"
+    ],
+    "test_paths": null
+}

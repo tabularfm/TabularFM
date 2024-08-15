@@ -80,7 +80,7 @@ def create_model(model_type, model_config):
 def _create_model_cfg_based_tvae(data_path, configs, config_type):
     if config_type == 'pretrain':
         return {
-            "input_dim": get_max_input_dim(data_path),
+            "input_dim": get_max_input_dim(data_path) if configs['model_cfg']['input_dim'] is None or 'input_dim' not in configs['model_cfg'] else configs['model_cfg']['input_dim'],
             "epochs": 1,
             "batch_size": configs['pretrain_cfg']['batch_size'],
             "lr": configs['pretrain_cfg']['lr'],
@@ -92,7 +92,7 @@ def _create_model_cfg_based_tvae(data_path, configs, config_type):
     
     if config_type == 'finetune':
         return {
-            "input_dim": get_max_input_dim(data_path),
+            "input_dim": get_max_input_dim(data_path) if configs['model_cfg']['input_dim'] is None or 'input_dim' not in configs['model_cfg'] else configs['model_cfg']['input_dim'],
             "epochs": configs['finetune_cfg']['epochs'],
             "batch_size": configs['finetune_cfg']['batch_size'],
             "lr": configs['finetune_cfg']['lr'],
