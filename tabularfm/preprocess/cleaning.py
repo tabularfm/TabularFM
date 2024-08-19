@@ -169,7 +169,7 @@ class TabCleaning():
         return series
     
     def is_id_column(self, series):
-        if len(series.unique()) == len(series):
+        if (series.dtype == 'object' or series.dtype == 'categorical') and len(series.unique()) == len(series):
             return True
 
         return False
