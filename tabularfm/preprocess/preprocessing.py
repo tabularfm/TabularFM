@@ -126,7 +126,7 @@ def preprocess_clean_gittables(src_data_dirs, dst_data_dirs, preprocessing_cfg, 
         data_dirs ([type]): [description]
         preprocessing_cfg ([type]): [description]
     """
-    from shortlist_utils import iterate_save_large_df
+    from process_gittables.shortlist_utils import iterate_save_large_df, get_df
     error_datasets = []
     
     for _dir in src_data_dirs:
@@ -135,7 +135,6 @@ def preprocess_clean_gittables(src_data_dirs, dst_data_dirs, preprocessing_cfg, 
         
         # try:
         # df = pd.read_csv(_dir)
-        from shortlist_utils import get_df
         
         clean_info_chunks = []
         n_keep_rows = 0
