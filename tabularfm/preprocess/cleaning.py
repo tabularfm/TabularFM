@@ -238,17 +238,19 @@ class TabCleaning():
                     cleaning_info[col] = {'keep': False, 'desc': 'TIMESTAMP'}
                     continue
             
-            if remove_low_frequency:
-                min_freq_threshold = kwargs['min_freq_threshold'] if 'min_freq_threshold' in kwargs else 0.08
-                pct_to_remove = kwargs['pct_to_remove'] if 'pct_to_remove' in kwargs else 0.8
-                if self.is_low_frequency_categorical_col(series, min_freq_threshold=min_freq_threshold, pct_to_remove=pct_to_remove):
-                    if verbose: print('\t del: low frequency values or id column')
-                    del df[col]
-                    cleaning_info[col] = {'keep': False, 'desc': 'LOW_FREQUENCY'}
-                    continue
+            # if remove_low_frequency:
+            #     min_freq_threshold = kwargs['min_freq_threshold'] if 'min_freq_threshold' in kwargs else 0.08
+            #     pct_to_remove = kwargs['pct_to_remove'] if 'pct_to_remove' in kwargs else 0.8
+            #     if self.is_low_frequency_categorical_col(series, min_freq_threshold=min_freq_threshold, pct_to_remove=pct_to_remove):
+            #         if verbose: print('\t del: low frequency values or id column')
+            #         del df[col]
+            #         cleaning_info[col] = {'keep': False, 'desc': 'LOW_FREQUENCY'}
+            #         continue
             
             # UPDATE SERIES
             
+            
+            pct_to_remove = kwargs['pct_to_remove'] if 'pct_to_remove' in kwargs else 0.8
             # FILL NA
             if self.is_nan(series):
                 # calculate percentage of nan
