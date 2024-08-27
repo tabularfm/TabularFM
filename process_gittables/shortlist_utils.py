@@ -111,9 +111,9 @@ def shortlist_gittables_lv2(shortlist_stats_df, data_path):
         df = get_df(os.path.join(data_path, ds_name))
         
         # repetitive, because free_text is already checked by is_id in cleaning
-        if _is_free_text_df(df):
-            valid_mask.append(False)
-            continue
+        # if _is_free_text_df(df):
+        #     valid_mask.append(False)
+        #     continue
         
         if _is_large_na_df(df):
             valid_mask.append(False)

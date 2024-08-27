@@ -134,3 +134,11 @@ archive/
 mlruns/
 rs*/
 tbr/
+
+# large files / dirs
+models/
+models_*
+datasets/
+datasets_*/
+downstream_*/
+examples/
