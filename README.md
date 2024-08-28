@@ -13,7 +13,13 @@
 
 TabularFM is an end-to-end framework for Tabular Foundational Models. We provide functions to train, finetune, evaluate on large amount of tabular datasets and tools to visualize and analyze foundational models. A wide range of learning methods are also supported. We have released leaderboards for Tabular Foundation Models, [visit our website](https://tabularfm.github.io) for more details. 
 
-# Update: We have released our pretrained tabular foundational models!
+# Datasets
+* Gittables ([Download](https://huggingface.co/datasets/lamthuy/TabularFM-GitTables))
+
+## Licensing Reminder
+The tables in datasets might be licensed under different licenses as inherited from their original sources. We will supplement original licenses in the metadata soon.
+
+# Pretrained tabular foundational models
 The following models are relased for Gittables datasets on Huggingface:
 * STVAE ([Download](https://huggingface.co/lamthuy/stvae_gittables))
 * CTGAN ([Download](https://huggingface.co/lamthuy/ctgan_gittables))
