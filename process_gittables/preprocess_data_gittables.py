@@ -1,7 +1,9 @@
+import sys
 import os
 import shutil
 import pandas as pd
-from tabularfm.preprocess.preprocessing import preprocess_clean_gittables
+
+from preprocess.preprocessing import preprocess_clean_gittables
 
 ############# CONFIG #############
 

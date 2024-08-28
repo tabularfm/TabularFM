@@ -3,10 +3,10 @@ import pickle
 import json
 import numpy as np
 import pandas as pd
+import re
 
 from preprocess.cleaning import TabCleaning
 from preprocess.meta import SingleTabMetadata
-
 
 def preprocess_duplicate(data_dirs, target_domain_dir, verbose=0):
     headers = np.array([k.split('/')[-2] for k in data_dirs])
@@ -126,7 +126,7 @@ def preprocess_clean_gittables(src_data_dirs, dst_data_dirs, preprocessing_cfg, 
         data_dirs ([type]): [description]
         preprocessing_cfg ([type]): [description]
     """
-    from process_gittables.shortlist_utils import iterate_save_large_df, get_df
+    from preprocess.utils import get_df, iterate_save_large_df
     error_datasets = []
     
     for _dir in src_data_dirs:
@@ -139,10 +139,14 @@ def preprocess_clean_gittables(src_data_dirs, dst_data_dirs, preprocessing_cfg, 
         clean_info_chunks = []
         n_keep_rows = 0
         
-        save_path = os.path.join(dst_data_dirs, os.path.dirname(_dir).split('/')[-1])
-        csv_path = os.path.join(save_path, os.path.dirname(_dir).split('/')[-1] + '.csv')
+        # save_path = os.path.join(dst_data_dirs, os.path.dirname(_dir).split('/')[-1])
+        # csv_path = os.path.join(save_path, os.path.dirname(_dir).split('/')[-1] + '.csv')
+
+        save_path = os.path.join(dst_data_dirs, os.path.split(_dir)[-1].split('.')[0])
+        csv_path = os.path.join(save_path, os.path.split(_dir)[-1].split('.')[0] + '.csv')
         
         if not os.path.exists(save_path):
+            print('Save path not found. Creating save path: ', save_path)
             os.mkdir(save_path)
         
         try:

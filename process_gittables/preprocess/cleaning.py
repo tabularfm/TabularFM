@@ -59,82 +59,84 @@ class TabCleaning():
         
         return False
 
+    def get_num_from_string(self, s):
+        # we assume that the numerical values will only ever contain one '.'
+        # if not, we will return nothing
+        # O(n) string processing
+        num = ''
+        # only these will directly impact the downstream parsing
+        allowed_characters = {
+            '.': 0,
+            '-': 0,
+            'e': 0,
+        }
+        for i in range(len(s)):
+            if s[i] == '.':
+                allowed_characters['.'] += 1
+                # handle multiple invalid misinputs
+                if allowed_characters['.'] > 1:
+                    return None
+                num += s[i]
+            elif s[i] == '-' and i == 0:
+                allowed_characters['-'] += 1
+                # handle cases like phone numbers separated by '-'
+                if allowed_characters['-'] > 1:
+                    return None
+                num += s[i]
+            elif s[i] == 'E' or s[i] == 'e':
+                allowed_characters['e'] += 1
+                # handle cases like 'eeeeeeeeee'
+                if allowed_characters['e'] > 1:
+                    return None
+                num += s[i]
+            elif s[i].isdigit():
+                num += s[i]
+        
+        if not num: return None
+        try: 
+            num = float(num)
+            return num
+        except Exception as e:
+            # add custom logging functions here
+            print('Error converting string to float:', e)
+            return None
+        
+    def check_if_mostly_numeric(self, series):
+        # get 10 possible samples
+        samples = series.sample(min(10, len(series)), random_state=42)
+        success = 0
+        pattern = r'^-?\d+(\.\d+)?([eE][-+]?\d+)?$'
+
+        for sample in samples: 
+            if type(sample) != str:
+                sample = str(sample)
+            # remove all whitespaces, commas, and parentheses
+            sample = sample.strip().replace(',', '').replace(' ', '').replace('(', '').replace(')', '')
+            # matches negatives, decimals, and scientific notation
+            if re.match(pattern, sample):
+                success += 1
+            elif sample.endswith('%'):
+                sample = sample[:-1]
+                if re.match(pattern, sample):
+                    success += 1
+            elif re.match(r'^[\$\£\€]', sample):
+                sample = sample[1:]
+                if re.match(pattern, sample):
+                    success += 1
+
+        # needs 70% success rate to continue
+        return success >= 7
+    
     def convert_stringified_to_numeric(self, series):
         '''
         Converts common types of numeric strings such as money values, percentages, etc. to numeric values.
         Suggested workflow: since this function will return NaN if a value is not valid,
         we recommend dropping/imputing empty values AFTER this is done.
         '''
-        def _get_num_from_string(s):
-            # we assume that the numerical values will only ever contain one '.'
-            # if not, we will return nothing
-            # O(n) string processing
-            num = ''
-            # only these will directly impact the downstream parsing
-            allowed_characters = {
-                '.': 0,
-                '-': 0,
-                'e': 0,
-            }
-            for i in range(len(s)):
-                if s[i] == '.':
-                    allowed_characters['.'] += 1
-                    # handle multiple invalid misinputs
-                    if allowed_characters['.'] > 1:
-                        return None
-                    num += s[i]
-                elif s[i] == '-' and i == 0:
-                    allowed_characters['-'] += 1
-                    # handle cases like phone numbers separated by '-'
-                    if allowed_characters['-'] > 1:
-                        return None
-                    num += s[i]
-                elif s[i] == 'E' or s[i] == 'e':
-                    allowed_characters['e'] += 1
-                    # handle cases like 'eeeeeeeeee'
-                    if allowed_characters['e'] > 1:
-                        return None
-                    num += s[i]
-                elif s[i].isdigit():
-                    num += s[i]
-            
-            if not num: return None
-            try: 
-                num = float(num)
-                return num
-            except Exception as e:
-                # add custom logging functions here
-                print('Error converting string to float:', e)
-                return None
-        
-        def _check_if_mostly_numeric(series):
-            # get 10 possible samples
-            samples = series.sample(10)
-            success = 0
-            pattern = r'^-?\d+(\.\d+)?([eE][-+]?\d+)?$'
-
-            for sample in samples: 
-                # remove all whitespaces, commas, and parentheses
-                sample = sample.strip().replace(',', '').replace(' ', '').replace('(', '').replace(')', '')
-                # matches negatives, decimals, and scientific notation
-                if re.match(pattern, sample):
-                    success += 1
-                elif sample.endswith('%'):
-                    sample = sample[:-1]
-                    if re.match(pattern, sample):
-                        success += 1
-                elif re.match(r'^[\$\£\€]', sample):
-                    sample = sample[1:]
-                    if re.match(pattern, sample):
-                        success += 1
-
-            # needs 70% success rate to continue
-            return success >= 7
-
         method_applied_flag = False
-        if series.dtype == 'object' and _check_if_mostly_numeric(series):
+        if series.dtype == 'object' and self.check_if_mostly_numeric(series):
             method_applied_flag = True
-            series = series.apply(lambda x: pd.to_numeric(_get_num_from_string(x), errors='coerce'))
+            series = series.apply(lambda x: pd.to_numeric(self.get_num_from_string(str(x)), errors='coerce'))
 
         return series, method_applied_flag
     
@@ -221,7 +223,8 @@ class TabCleaning():
 
             if transform_stringified_numerical_columns:
                 series, stringified_column_transformed = self.convert_stringified_to_numeric(series)
-                cleaning_info[col] = {'keep': True, 'desc': 'STRINGIFIED_TO_NUMERIC'}
+                if stringified_column_transformed:
+                    cleaning_info[col] = {'keep': True, 'desc': 'STRINGIFIED_TO_NUMERIC'}
 
             # ID COLUMN
             if self.is_id_column(series) and not stringified_column_transformed:
@@ -305,7 +308,7 @@ class TabCleaning():
             self.process_cols[col] = True #
             if verbose: print('\t pass')
             
-            if cleaning_info[col]:
+            if cleaning_info.get(col):
                 continue
             cleaning_info[col] = {'keep': True, 'desc': 'NA'}
             

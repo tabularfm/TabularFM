@@ -142,3 +142,6 @@ datasets/
 datasets_*/
 downstream_*/
 examples/
+
+dataset_gittables/
+eda_gittables/

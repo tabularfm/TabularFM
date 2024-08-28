@@ -309,8 +309,10 @@ def merge_df(stats_df, path, data_path, save_path):
         #     continue
         
         gr_name_wpath = path + '_' + gr_name
-        save_ds_dir = os.path.join(save_path, gr_name_wpath)    
+        save_ds_dir = os.path.join(save_path, gr_name_wpath)   
+        print(save_ds_dir) 
         if not os.path.exists(save_ds_dir):
+            print('creating directory...')
             os.mkdir(save_ds_dir)
         
         save_csv_path = os.path.join(save_ds_dir, gr_name_wpath + '.csv')

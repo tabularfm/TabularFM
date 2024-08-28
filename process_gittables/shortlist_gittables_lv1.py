@@ -1,16 +1,20 @@
 import os
 from shortlist_utils import *
 
-DATA_PATH = '../dataset_gittables'
-SAVE_PATH = '../eda_gittables'
 
+DATA_PATH = 'dataset_gittables'
+SAVE_PATH = 'eda_gittables'
+
+print('#################### Shortlist gittables lv1 ####################')
 # all paths of dataset directories
 paths = os.listdir(DATA_PATH)
-
+print('current data dir: ', DATA_PATH)
+print('all paths: ', paths)
 
 for path in paths:
     
-    if not os.path.isdir(path):
+    if not os.path.isdir(os.path.join(DATA_PATH, path)):
+        print('This path is not a valid path. Skipping...')
         continue
     
     print(path)

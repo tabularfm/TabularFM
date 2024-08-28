@@ -3,10 +3,12 @@ from shortlist_utils import merge_df
 import pandas as pd
 import gc
 
-DATA_PATH = '../dataset_gittables'
-EDA_PATH = '../eda_gittables'
-SAVE_PATH = 'data/gittables_v2'
+DATA_PATH = 'dataset_gittables'
+EDA_PATH = 'eda_gittables'
+SAVE_PATH_MAIN_DIR = 'data'
+SAVE_PATH_SUB_DIR = 'gittables_v2'
 
+SAVE_PATH = os.path.join(SAVE_PATH_MAIN_DIR, SAVE_PATH_SUB_DIR)
 paths = os.listdir(EDA_PATH)
 
 for path in paths:
