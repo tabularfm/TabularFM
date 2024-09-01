@@ -99,7 +99,7 @@ def preprocess_clean(src_data_dirs, dst_data_dirs, preprocessing_cfg, min_cols_t
 def chunk_df(df_path, chunksize=1e4, load_df_func=None):
     load_df = load_df_func if load_df_func is not None else pd.read_csv
     df_size = os.path.getsize(df_path) / 1e6
-    if df_size >= 200: # large file, split
+    if df_size >= 2000: # large file, split
         for chunk in load_df(df_path, chunksize=chunksize):
             yield chunk
     else:

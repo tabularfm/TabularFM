@@ -15,8 +15,12 @@ for path in paths:
     print(f'SET {path}--------------------------')
     
     eda_path = os.path.join(EDA_PATH, path)
-    stats_df_lv3 = pd.read_csv(os.path.join(eda_path, 'stats_lv3_2.csv'))
-    
-    merge_df(stats_df_lv3, path, DATA_PATH, SAVE_PATH)
-    
-    gc.collect()
+    try:
+        stats_df_lv3 = pd.read_csv(os.path.join(eda_path, 'stats_lv3_2.csv'))
+        
+        merge_df(stats_df_lv3, path, DATA_PATH, SAVE_PATH)
+        
+        gc.collect()
+    except:
+        print('This dataset might have been filtered in the previous levels.')
+        continue

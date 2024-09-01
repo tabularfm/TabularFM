@@ -7,15 +7,15 @@ from pathlib import Path
 import pickle
 import re
 
-def get_df(path):
+def get_df(path, **kwargs):
     try:
         # df = pd.read_csv(path, on_bad_lines='skip', encoding = "ISO-8859-1", index_col=0)
         # df = pd.read_csv(path, on_bad_lines='skip', encoding = "ISO-8859-1")
-        df = pd.read_csv(path, on_bad_lines='skip', encoding = 'utf-8')
+        df = pd.read_csv(path, on_bad_lines='skip', encoding = 'utf-8', **kwargs)
     except:
         # df = pd.read_csv(path, on_bad_lines='skip', encoding = "ISO-8859-1", lineterminator='\n', quoting=csv.QUOTE_NONE, index_col=0)
         # df = pd.read_csv(path, on_bad_lines='skip', encoding = "ISO-8859-1", quoting=csv.QUOTE_NONE, index_col=0)
-        df = pd.read_csv(path, on_bad_lines='skip', encoding = 'utf-8', lineterminator='\n', quoting=csv.QUOTE_NONE)
+        df = pd.read_csv(path, on_bad_lines='skip', encoding = 'utf-8', lineterminator='\n', quoting=csv.QUOTE_NONE, **kwargs)
         
     return df
 
